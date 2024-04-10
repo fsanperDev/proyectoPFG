@@ -5,7 +5,7 @@ plugins {
 
 android {
     namespace = "com.fsanper.proyectopfg"
-    compileSdk = 33
+    compileSdk = 34
 
     defaultConfig {
         applicationId = "com.fsanper.proyectopfg"
@@ -66,4 +66,24 @@ dependencies {
     androidTestImplementation("androidx.compose.ui:ui-test-junit4")
     debugImplementation("androidx.compose.ui:ui-tooling")
     debugImplementation("androidx.compose.ui:ui-test-manifest")
+
+    //Integrar ViewModels con Compose
+    implementation("androidx.lifecycle:lifecycle-viewmodel-compose:2.6.2")
+    //Integrar ConstraintLayout
+    implementation ("androidx.constraintlayout:constraintlayout-compose:1.0.1")
+    //Incluir conjuto de Iconos
+    implementation("androidx.compose.material:material-icons-extended:1.5.4")
+    //Implementar la Navegación
+    implementation("androidx.navigation:navigation-compose:2.7.4")
+    //Firebase
+    implementation(platform("com.google.firebase:firebase-bom:32.4.0"))
+    implementation("com.google.firebase:firebase-auth-ktx")
+    implementation("com.google.firebase:firebase-firestore-ktx")
+    implementation("com.google.firebase:firebase-storage:17.0.0")
+    // Google services
+    implementation("com.google.android.gms:play-services-auth:20.7.0")
+    //Biblioteca de Carga imagen
+    implementation("io.coil-kt:coil-compose:1.3.2")
+    //Biblioteca de escaneo
+    implementation ("com.journeyapps:zxing-android-embedded:4.3.0")
 }
