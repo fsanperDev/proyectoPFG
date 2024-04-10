@@ -1,6 +1,8 @@
 package com.fsanper.proyectopfg.navegacion
 
 import androidx.compose.runtime.Composable
+import androidx.navigation.NavHost
+import androidx.navigation.NavHostController
 
 /**
  * Composable que define la estructura de navegación de la aplicación utilizando Jetpack Navigation Compose.
@@ -15,45 +17,21 @@ fun NavGraph(
     // Componente de navegación que contiene las pantallas de la aplicación
     NavHost(
         navController = navController,
-        startDestination = Screens.SplashScreen.name
+        startDestination = Pantallas.SplashScreen.name
     ) {
         // Definición de las composables asociadas a cada pantalla
-        composable(Screens.SplashScreen.name) {
+        composable(Pantallas.SplashScreen.name) {
             SplashScreen(
                 navController = navController
             )
         }
 
-        composable(Screens.LoginScreen.name) {
+        composable(Pantallas.LoginScreen.name) {
             LoginScreen(navController = navController)
         }
 
-        composable(Screens.HomeScreen.name) {
+        composable(Pantallas.HomeScreen.name) {
             HomeScreen(navController = navController)
-        }
-
-        composable(Screens.AdminScreen.name) {
-            AdminScreen(navController = navController)
-        }
-
-        composable(Screens.AddGameScreen.name) {
-            AddGameScreen(navController = navController, adminViewModel = adminViewModel)
-        }
-
-        composable(Screens.GetGameScreen.name) {
-            GetGameScreen(navController = navController, adminViewModel = adminViewModel)
-        }
-
-        composable(Screens.OrderScreen.name) {
-            OrderScreen(navController = navController)
-        }
-
-        composable(Screens.VerifiedPayment.name) {
-            VerifiedPayment(navController = navController)
-        }
-
-        composable(Screens.GuardScreen.name) {
-            GuardScreen(navController = navController)
         }
     }
 }
