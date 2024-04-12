@@ -1,3 +1,36 @@
 <resources>
     <string name="app_name">proyectoPFG</string>
+    <string name="create_account">Create an account</string>
+    <string name="welcome">Welcome Back</string>
+    <string name="first_name">First Name</string>
+    <string name="last_name">Last Name</string>
+    <string name="email">Email</string>
+    <string name="password">Pass</string>
+    <string name="hide_password">Hide password</string>
+    <string name="show_password">Show password</string>
+    <string name="register">Register</string>
+    <string name="login">Login</string>
+    <string name="or">or</string>
+    <string name="go_to_login">Already have an account? Login</string>
+    <string name="forgot_password">Forgot your password?</string>
+    <string name="genero">Genero</string>
+    <string name="age">Edad</string>
+    <string name="home">Home</string>
+    <string name="admin">Admin</string>
+    <string name="menu">Menu</string>
+    <string name="logout">Logout</string>
+    <string name="add_data">Add Game Data</string>
+    <string name="get_data">Get Game Data</string>
+    <string name="login_con_google">Login con Google</string>
+    <string name="favourite">favourite</string>
+    <string name="profile">profile</string>
+    <string name="coming_soon">coming soon</string>
+    <string name="subscribe_question">subscribe question</string>
+    <string name="subscribed_info">subscribe info</string>
+    <string name="order">Order</string>
+    <string name="catalogo">Listado de Juegos</string>
+    <string name="cesta">Tus Pedidos</string>
+    <string name="pago">Forma de Pago</string>
+    <string name="guard">Guard</string>
+    <string name="verficacion_2_pasos">Verificación en 2 pasos</string>
 </resources>

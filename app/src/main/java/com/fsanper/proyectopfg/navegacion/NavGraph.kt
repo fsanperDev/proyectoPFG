@@ -1,8 +1,12 @@
 package com.fsanper.proyectopfg.navegacion
 
 import androidx.compose.runtime.Composable
-import androidx.navigation.NavHost
 import androidx.navigation.NavHostController
+import androidx.navigation.compose.NavHost
+import androidx.navigation.compose.composable
+import com.fsanper.e10.screen.login.LoginScreen
+import com.fsanper.proyectopfg.pantalla.principal.HomeScreen
+import com.fsanper.proyectopfg.pantalla.splash.SplashScreen
 
 /**
  * Composable que define la estructura de navegación de la aplicación utilizando Jetpack Navigation Compose.
@@ -12,7 +16,6 @@ import androidx.navigation.NavHostController
 @Composable
 fun NavGraph(
     navController: NavHostController,
-    adminViewModel: AdminViewModel
 ) {
     // Componente de navegación que contiene las pantallas de la aplicación
     NavHost(
