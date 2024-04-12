@@ -5,8 +5,8 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.navigation.NavHostController
-import com.fsanper.e10.model.usuario.User
-import com.fsanper.e10.navegacion.Screens
+import com.fsanper.proyectopfg.modelo.usuario.Usuario
+import com.fsanper.proyectopfg.navegacion.Pantallas
 import com.google.firebase.Firebase
 import com.google.firebase.auth.AuthCredential
 import com.google.firebase.auth.FirebaseAuth
@@ -106,7 +106,7 @@ class LoginScreenViewModel : ViewModel() {
         val salt = generateSalt()
         val hashedPassword = hashPassword(password, salt)
 
-        val userObject = User(
+        val userObject = Usuario(
             userId = userId.toString(),
             user = user,
             name = name.toString(),
@@ -160,7 +160,7 @@ class LoginScreenViewModel : ViewModel() {
         val authStateListener = FirebaseAuth.AuthStateListener {
             if (it.currentUser == null) {
                 // Ir a la pantalla de inicio de sesión
-                navController.navigate(Screens.LoginScreen.name)
+                navController.navigate(Pantallas.LoginScreen.name)
             }
         }
         firebaseAuth.addAuthStateListener(authStateListener)

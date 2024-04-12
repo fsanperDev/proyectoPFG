@@ -31,7 +31,6 @@ import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
@@ -48,7 +47,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
@@ -63,8 +61,8 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
 import androidx.navigation.NavController
-import com.fsanper.e10.R
-import com.fsanper.e10.navegacion.Screens
+import com.fsanper.proyectopfg.R
+import com.fsanper.proyectopfg.navegacion.Pantallas
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions
 import com.google.android.gms.common.api.ApiException
@@ -97,7 +95,7 @@ fun LoginScreen(
             val credential = GoogleAuthProvider.getCredential(account.idToken, null)
             // Inicia sesión con las credenciales de Google y navega a la pantalla de inicio
             viewModel.signInWithGoogleCredential(credential) {
-                navController.navigate(Screens.HomeScreen.name)
+                navController.navigate(Pantallas.HomeScreen.name)
             }
         } catch (ex: Exception) {
             Log.d("My Login", "GoogleSignIn falló")
@@ -142,14 +140,14 @@ fun LoginScreen(
                             email,
                             password
                         ) {
-                            navController.navigate(Screens.AdminScreen.name)
+                            //navController.navigate(Pantallas.AdminScreen.name)
                         }
                     } else {
                         viewModel.signInWithEmailAndPassword(
                             email,
                             password
                         ) {
-                            navController.navigate(Screens.HomeScreen.name)
+                            navController.navigate(Pantallas.HomeScreen.name)
                         }
                     }
                 }
@@ -166,7 +164,7 @@ fun LoginScreen(
                             email,
                             password
                         ) {
-                            navController.navigate(Screens.AdminScreen.name)
+                            //navController.navigate(Pantallas.AdminScreen.name)
                         }
                     } else {
                         viewModel.createUserWithEmailAndPassword(
@@ -175,7 +173,7 @@ fun LoginScreen(
                             email,
                             password
                         ) {
-                            navController.navigate(Screens.HomeScreen.name)
+                            navController.navigate(Pantallas.HomeScreen.name)
                         }
                     }
                 }
