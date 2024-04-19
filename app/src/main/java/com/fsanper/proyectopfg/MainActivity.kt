@@ -10,9 +10,15 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.navigation.NavHostController
+import androidx.navigation.compose.rememberNavController
+import com.fsanper.proyectopfg.navegacion.NavGraph
 import com.fsanper.proyectopfg.ui.theme.ProyectoPFGTheme
 
 class MainActivity : ComponentActivity() {
+    // Controlador de navegación para gestionar la navegación entre pantallas
+    private lateinit var navController: NavHostController
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
@@ -22,25 +28,12 @@ class MainActivity : ComponentActivity() {
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colorScheme.background
                 ) {
-                    Greeting("Android")
+                    navController = rememberNavController()
+
+                    // Crear el gráfico de navegación y pasar el controlador de navegación y ViewModel de administrador
+                    NavGraph(navController = navController)
                 }
             }
         }
-    }
-}
-
-@Composable
-fun Greeting(name: String, modifier: Modifier = Modifier) {
-    Text(
-        text = "Hello $name!",
-        modifier = modifier
-    )
-}
-
-@Preview(showBackground = true)
-@Composable
-fun GreetingPreview() {
-    ProyectoPFGTheme {
-        Greeting("Android")
     }
 }

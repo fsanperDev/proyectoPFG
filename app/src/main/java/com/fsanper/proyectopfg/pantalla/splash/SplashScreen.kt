@@ -22,7 +22,6 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -46,14 +45,6 @@ fun SplashScreen(navController: NavController) {
     // Animación de escala para la imagen del logo
     val scale = remember { Animatable(0f) }
 
-    // Contexto local necesario para crear el reproductor de medios
-    val context = LocalContext.current
-
-
-    // Alcance de la corrutina para manejar la ejecución de tareas asincrónicas
-    val coroutineScope = rememberCoroutineScope()
-
-
     // Efecto lanzado para realizar animaciones y acciones al cargarse el composable
     LaunchedEffect(key1 = true) {
         // Animar la escala de la imagen del logo
@@ -66,7 +57,6 @@ fun SplashScreen(navController: NavController) {
                 }
             )
         )
-
         // Aguardar un breve periodo antes de navegar a la siguiente pantalla
         delay(1000)
 

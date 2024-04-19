@@ -1,4 +1,4 @@
-package com.fsanper.e10.screen.login
+package com.fsanper.proyectopfg.pantalla.login
 
 import android.util.Log
 import android.util.Patterns
@@ -83,7 +83,7 @@ fun LoginScreen(
 
     // Configuración para la autenticación con Google
     // Este token se obtiene en Firebase -> Proveedores de Acceso -> Google-> Conf del SDK -> Id de cliente web
-    val token = "284000301122-c2gnsl6cquq7nk5kj0plg9nfo21dn29a.apps.googleusercontent.com"
+    val token = "169601410717-64tu81fuju8l823bp6ehm8v898fpl6dc.apps.googleusercontent.com"
     val context = LocalContext.current
     val launcher = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.StartActivityForResult()
@@ -134,21 +134,12 @@ fun LoginScreen(
                 // Formulario de inicio de sesión
                 UserForm(isCreateAccount = false) { email, password ->
                     Log.d("My Login", "Logueando con $email y $password")
-                    // Lógica para navegar a la pantalla de usuario regular o de administrador
-                    if (email.endsWith("@admin.com") || email.endsWith("@admin.es")) {
-                        viewModel.signInWithEmailAndPassword(
-                            email,
-                            password
-                        ) {
-                            //navController.navigate(Pantallas.AdminScreen.name)
-                        }
-                    } else {
-                        viewModel.signInWithEmailAndPassword(
-                            email,
-                            password
-                        ) {
-                            navController.navigate(Pantallas.HomeScreen.name)
-                        }
+                    // Lógica para navegar a la pantalla de usuario regular
+                    viewModel.signInWithEmailAndPassword(
+                        email,
+                        password
+                    ) {
+                        navController.navigate(Pantallas.HomeScreen.name)
                     }
                 }
             } else {
@@ -156,25 +147,14 @@ fun LoginScreen(
                 Text(text = stringResource(id = R.string.create_account))
                 RegisterUserForm(isCreateAccount = true) { user, name, email, password ->
                     Log.d("My Login", "Logueando con $email y $password")
-                    // Lógica para crear un usuario y navegar a la pantalla correspondiente
-                    if (email.endsWith("@admin.com") || email.endsWith("@admin.es")) {
-                        viewModel.createUserWithEmailAndPassword(
-                            user,
-                            name,
-                            email,
-                            password
-                        ) {
-                            //navController.navigate(Pantallas.AdminScreen.name)
-                        }
-                    } else {
-                        viewModel.createUserWithEmailAndPassword(
-                            user,
-                            name,
-                            email,
-                            password
-                        ) {
-                            navController.navigate(Pantallas.HomeScreen.name)
-                        }
+                    // Lógica para crear un usuario y navegar a la pantalla principal
+                    viewModel.createUserWithEmailAndPassword(
+                        user,
+                        name,
+                        email,
+                        password
+                    ) {
+                        navController.navigate(Pantallas.HomeScreen.name)
                     }
                 }
             }
@@ -203,7 +183,7 @@ fun LoginScreen(
             }
 
             // Row con un botón para iniciar sesión con Google
-            Row(
+            /*Row(
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(10.dp)
@@ -240,7 +220,7 @@ fun LoginScreen(
                         fontWeight = FontWeight.Bold
                     )
                 }
-            }
+            }*/
         }
     }
 }

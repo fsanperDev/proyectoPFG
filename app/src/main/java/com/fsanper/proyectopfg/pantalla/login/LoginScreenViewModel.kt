@@ -1,4 +1,4 @@
-package com.fsanper.e10.screen.login
+package com.fsanper.proyectopfg.pantalla.login
 
 import android.util.Log
 import androidx.lifecycle.MutableLiveData
@@ -109,11 +109,11 @@ class LoginScreenViewModel : ViewModel() {
         val userObject = Usuario(
             userId = userId.toString(),
             user = user,
-            name = name.toString(),
-            email = email.toString(),
+            name = name,
+            email = email,
             password = hashedPassword,
             id = null
-        ).toMap(salt)
+        )
 
         FirebaseFirestore.getInstance()
             .collection("users")

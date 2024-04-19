@@ -62,9 +62,9 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
-import com.fsanper.e10.screen.login.LoginScreenViewModel
 import com.fsanper.proyectopfg.R
 import com.fsanper.proyectopfg.modelo.menu.MenuItem
+import com.fsanper.proyectopfg.pantalla.login.LoginScreenViewModel
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 

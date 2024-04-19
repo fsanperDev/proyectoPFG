@@ -4,7 +4,7 @@ import androidx.compose.runtime.Composable
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
-import com.fsanper.e10.screen.login.LoginScreen
+import com.fsanper.proyectopfg.pantalla.login.LoginScreen
 import com.fsanper.proyectopfg.pantalla.principal.HomeScreen
 import com.fsanper.proyectopfg.pantalla.splash.SplashScreen
 
