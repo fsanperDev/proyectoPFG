@@ -3,6 +3,7 @@ plugins {
     id("org.jetbrains.kotlin.android")
 
     id("com.google.gms.google-services")
+    id ("kotlin-kapt")
 }
 
 android {
@@ -32,11 +33,11 @@ android {
         }
     }
     compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_1_8
-        targetCompatibility = JavaVersion.VERSION_1_8
+        sourceCompatibility = JavaVersion.VERSION_17
+        targetCompatibility = JavaVersion.VERSION_17
     }
     kotlinOptions {
-        jvmTarget = "1.8"
+        jvmTarget = "17"
     }
     buildFeatures {
         compose = true
@@ -84,4 +85,10 @@ dependencies {
     implementation("com.google.firebase:firebase-storage:17.0.0")
     // Google services
     implementation("com.google.android.gms:play-services-auth:20.7.0")
+
+    //Retrofit
+    implementation ("com.squareup.retrofit2:retrofit:2.9.0")
+    implementation ("com.squareup.retrofit2:converter-gson:2.9.0")
+    //Coil
+    implementation ("io.coil-kt:coil-compose:1.4.0")
 }

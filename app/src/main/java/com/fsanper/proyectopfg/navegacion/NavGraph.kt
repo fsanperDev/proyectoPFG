@@ -7,6 +7,7 @@ import androidx.navigation.compose.composable
 import com.fsanper.proyectopfg.pantalla.login.LoginScreen
 import com.fsanper.proyectopfg.pantalla.principal.HomeScreen
 import com.fsanper.proyectopfg.pantalla.splash.SplashScreen
+import com.fsanper.proyectopfg.viewModels.VideojuegosViewModel
 
 /**
  * Composable que define la estructura de navegación de la aplicación utilizando Jetpack Navigation Compose.
@@ -16,6 +17,7 @@ import com.fsanper.proyectopfg.pantalla.splash.SplashScreen
 @Composable
 fun NavGraph(
     navController: NavHostController,
+    viewModel: VideojuegosViewModel
 ) {
     // Componente de navegación que contiene las pantallas de la aplicación
     NavHost(
@@ -34,7 +36,7 @@ fun NavGraph(
         }
 
         composable(Pantallas.HomeScreen.name) {
-            HomeScreen(navController = navController)
+            HomeScreen(navController = navController, viewModel = viewModel)
         }
     }
 }
