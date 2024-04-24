@@ -70,6 +70,8 @@ import androidx.navigation.NavController
 import androidx.navigation.NavHostController
 import com.fsanper.proyectopfg.R
 import com.fsanper.proyectopfg.componente.CardJuego
+import com.fsanper.proyectopfg.componente.MyDrawerContent
+import com.fsanper.proyectopfg.componente.MyTopBar
 import com.fsanper.proyectopfg.modelo.menu.MenuItem
 import com.fsanper.proyectopfg.pantalla.login.LoginScreenViewModel
 import com.fsanper.proyectopfg.viewModels.VideojuegosViewModel
@@ -139,9 +141,7 @@ fun HomeScreen(
                     .padding(paddingValues),
                 color = colorResource(id = R.color.cuerpo)
             ) {
-                Spacer(modifier = Modifier.height(10.dp))
-                // Contenido principal de la pantalla
-                InicioView(navController = navController, viewModel = viewModel)
+                Contenido(navController = navController, viewModel = viewModel)
             }
         }
     }
@@ -153,21 +153,6 @@ fun HomeScreen(
     }
 }
 
-@OptIn(ExperimentalMaterial3Api::class)
-@Composable
-fun InicioView(
-    navController: NavController,
-    viewModel: VideojuegosViewModel
-){
-    Scaffold{
-        Contenido(
-            navController = navController,
-            viewModel = viewModel,
-            pad = it
-        )
-    }
-}
-
 /**
  * Composable que representa el contenido principal de la pantalla.
  * Muestra una lista de juegos.
@@ -176,32 +161,14 @@ fun InicioView(
 @Composable
 fun Contenido(
     navController: NavController,
-    viewModel: VideojuegosViewModel,
-    pad: PaddingValues
+    viewModel: VideojuegosViewModel
 ) {
     val juegos by viewModel.juegos.collectAsState()
     val isLoading by viewModel.isLoading.collectAsState()
 
-    LazyColumn(
-        modifier = Modifier
-            .padding(pad)
-    ){
+    LazyColumn{
         items(juegos) {
             CardJuego(juego = it) { }
-            Text(
-                text = it.nombre,
-                fontWeight = FontWeight.ExtraBold,
-                color = Color.White,
-                modifier = Modifier
-                    .padding(start = 12.dp)
-            )
-            Text(
-                text = it.released,
-                fontWeight = FontWeight.ExtraBold,
-                color = Color.White,
-                modifier = Modifier
-                    .padding(start = 12.dp)
-            )
         }
         item {
             if (isLoading) {
@@ -221,188 +188,6 @@ fun Contenido(
                     )
                 }
             }
-        }
-    }
-}
-
-/**
- * Composable que representa la barra superior personalizada.
- * @param onMenuClick Función de devolución de llamada cuando se hace clic en el icono del menú.
- */
-@OptIn(ExperimentalMaterial3Api::class)
-@Composable
-fun MyTopBar(
-    onMenuClick: () -> Unit,
-) {
-    TopAppBar(
-        modifier = Modifier
-            .fillMaxWidth()
-            .background(colorResource(id = R.color.boton)),
-        navigationIcon = {
-            // Icono de menú
-            IconButton(onClick = {
-                onMenuClick()
-            }) {
-                Icon(
-                    imageVector = Icons.Default.Menu,
-                    contentDescription = stringResource(R.string.menu),
-                    tint = colorResource(id = R.color.cuerpo),
-                )
-            }
-        },
-        title = {
-            // Título de la barra superior
-            Row(
-                verticalAlignment = Alignment.CenterVertically,
-                modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.SpaceBetween
-            ) {
-                Text(
-                    text = stringResource(R.string.home),
-                    color = colorResource(id = R.color.cuerpo),
-                    fontSize = 18.sp,
-                    fontWeight = FontWeight.Bold
-                )
-            }
-        },
-        colors = TopAppBarDefaults.centerAlignedTopAppBarColors(
-            containerColor = colorResource(id = R.color.menu)
-        )
-    )
-}
-
-/**
- * Composable que representa el contenido del cajón de navegación.
- * @param modifier Modificador para el contenido del cajón.
- * @param onItemSelected Función de devolución de llamada cuando se selecciona un elemento.
- * @param onBackPress Función de devolución de llamada cuando se presiona el botón de retroceso.
- * @param navController Objeto NavController que controla la navegación.
- * @param loginViewModel ViewModel para la pantalla de inicio de sesión.
- */
-@OptIn(ExperimentalMaterial3Api::class)
-@Composable
-fun MyDrawerContent(
-    modifier: Modifier = Modifier,
-    onItemSelected: (title: String) -> Unit,
-    onBackPress: () -> Unit,
-    navController: NavHostController,
-    loginViewModel: LoginScreenViewModel = viewModel()
-) {
-    // Estilo de borde y elementos del menú
-    val borderWidth = 4.dp
-    val menu = listOf(
-        MenuItem(
-            title = stringResource(R.string.home),
-            icon = Icons.Default.Home,
-        ),
-        MenuItem(
-            title = stringResource(id = R.string.logout),
-            icon = Icons.Filled.Logout
-        )
-    )
-
-    // Diseño del cajón de navegación
-    ModalDrawerSheet(modifier) {
-        Column(modifier.fillMaxSize()) {
-            // Cabecera del cajón con el logo de la aplicación
-            Box(
-                modifier = Modifier
-                    .height(190.dp)
-                    .fillMaxWidth()
-                    .background(colorResource(id = R.color.boton)),
-                contentAlignment = Alignment.Center
-            ){
-                Image(
-                    painter = painterResource(id = R.drawable.logo_app),
-                    contentDescription = "Logo",
-                    contentScale = ContentScale.Crop,
-                    modifier = Modifier
-                        .size(150.dp)
-                        .border(
-                            BorderStroke(borderWidth, colorResource(id = R.color.cuerpo)),
-                            CircleShape
-                        )
-                        .padding(borderWidth)
-                        .clip(CircleShape)
-                )
-            }
-            // Elementos del menú
-            LazyColumn {
-                items(menu) { menuList ->
-                    NavigationDrawerItem(
-                        shape = MaterialTheme.shapes.small,
-                        label = {
-                            Text(
-                                text = menuList.title,
-                                color = colorResource(id = R.color.cuerpo),
-                            )
-                        },
-                        selected = menuList == menu[0],
-                        icon = {
-                            Icon(
-                                imageVector = menuList.icon,
-                                contentDescription = menuList.title,
-                                tint = colorResource(id = R.color.cuerpo),
-                            )
-                        },
-                        onClick = {
-                            onItemSelected.invoke(menuList.title)
-                            when (menuList.title) {
-                                "Home" -> {
-                                    navController.navigate("homeScreen")
-                                    onBackPress() // Cierra el cajón de navegación después de la navegación
-                                }
-                                "Logout" -> {
-                                    loginViewModel.logout(navController)
-                                }
-                            }
-                        },
-                    )
-                }
-            }
-            Divider()
-        }
-
-    }
-    // Manejador de retroceso personalizado
-    BackPressHandler {
-        onBackPress()
-    }
-}
-
-/**
- * Composable que maneja el evento de retroceso en la aplicación.
- * @param enabled Indica si el manejador está habilitado.
- * @param onBackPressed Función de devolución de llamada cuando se presiona el botón de retroceso.
- */
-@Composable
-fun BackPressHandler(enabled: Boolean = true, onBackPressed: () -> Unit) {
-    // Estado actualizado de la función de retroceso
-    val currentOnBackPressed by rememberUpdatedState(onBackPressed)
-    // Creación de un callback para el evento de retroceso
-    val backCallback = remember {
-        object : OnBackPressedCallback(enabled) {
-            override fun handleOnBackPressed() {
-                currentOnBackPressed()
-            }
-        }
-    }
-    // Actualización de la capacidad del callback según la activación
-    SideEffect {
-        backCallback.isEnabled = enabled
-    }
-
-    val backDispatcher = checkNotNull(LocalOnBackPressedDispatcherOwner.current) {
-        "No OnBackPressedDispatcherOwner was provided via LocalOnBackPressedDispatcherOwner"
-    }.onBackPressedDispatcher
-
-    val lifecycleOwner = LocalLifecycleOwner.current
-    // Registro del callback en el Dispatcher
-    DisposableEffect(lifecycleOwner, backDispatcher) {
-        backDispatcher.addCallback(lifecycleOwner, backCallback)
-        // Eliminación del callback cuando el Composable se destruye
-        onDispose {
-            backCallback.remove()
         }
     }
 }

@@ -81,27 +81,6 @@ fun LoginScreen(
         mutableStateOf(true)
     }
 
-    // Configuración para la autenticación con Google
-    // Este token se obtiene en Firebase -> Proveedores de Acceso -> Google-> Conf del SDK -> Id de cliente web
-    val token = "169601410717-64tu81fuju8l823bp6ehm8v898fpl6dc.apps.googleusercontent.com"
-    val context = LocalContext.current
-    val launcher = rememberLauncherForActivityResult(
-        contract = ActivityResultContracts.StartActivityForResult()
-    ) {
-        // Maneja el resultado de la actividad de inicio de sesión de Google
-        val task = GoogleSignIn.getSignedInAccountFromIntent(it.data)
-        try {
-            val account = task.getResult(ApiException::class.java)
-            val credential = GoogleAuthProvider.getCredential(account.idToken, null)
-            // Inicia sesión con las credenciales de Google y navega a la pantalla de inicio
-            viewModel.signInWithGoogleCredential(credential) {
-                navController.navigate(Pantallas.HomeScreen.name)
-            }
-        } catch (ex: Exception) {
-            Log.d("My Login", "GoogleSignIn falló")
-        }
-    }
-
     // Diseño de la superficie que ocupa toda la pantalla
     Surface(
         modifier = Modifier.fillMaxSize(),
@@ -181,46 +160,6 @@ fun LoginScreen(
                     color = colorResource(id = R.color.menu)
                 )
             }
-
-            // Row con un botón para iniciar sesión con Google
-            /*Row(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(10.dp)
-                    .clip(RoundedCornerShape(10.dp))
-                    .clickable {
-                        // Configuración de opciones para la autenticación con Google
-                        val opciones = GoogleSignInOptions
-                            .Builder(
-                                GoogleSignInOptions.DEFAULT_SIGN_IN
-                            )
-                            .requestIdToken(token)
-                            .requestEmail()
-                            .build()
-
-                        // Crea un cliente de inicio de sesión de Google con las opciones configuradas
-                        val googleSignInCliente = GoogleSignIn.getClient(context, opciones)
-                        launcher.launch(googleSignInCliente.signInIntent)
-                    },
-                horizontalArrangement = Arrangement.Center,
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                // Muestra el ícono de Google y el texto del botón
-                if (showLoginForm.value) {
-                    Image(
-                        painterResource(id = R.drawable.icon_google),
-                        contentDescription = "Login con Google",
-                        modifier = Modifier
-                            .padding(10.dp)
-                            .size(40.dp)
-                    )
-                    Text(
-                        text = stringResource(R.string.login_con_google),
-                        fontSize = 18.sp,
-                        fontWeight = FontWeight.Bold
-                    )
-                }
-            }*/
         }
     }
 }

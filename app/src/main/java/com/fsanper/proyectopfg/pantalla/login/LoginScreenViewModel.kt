@@ -74,27 +74,6 @@ class LoginScreenViewModel : ViewModel() {
     }
 
     /**
-     * Inicia sesión utilizando credenciales de Google.
-     * @param credential: Credencial de autenticación de Google.
-     * @param home: Función de retorno para manejar la navegación después del inicio de sesión.
-     */
-    fun signInWithGoogleCredential(credential: AuthCredential, home: () -> Unit) =
-        viewModelScope.launch {
-            try {
-                auth.signInWithCredential(credential).addOnCompleteListener() { task ->
-                    if (task.isSuccessful) {
-                        Log.d("MyLogin", "signInWithEmailAndPassword: ¡Logueado!")
-                        home()
-                    } else {
-                        Log.d("MyLogin", "signInWithEmailAndPassword: ${task.result.toString()}")
-                    }
-                }
-            } catch (ex: Exception) {
-                Log.d("MyLogin", "signInWithEmailAndPassword: ${ex.message}")
-            }
-        }
-
-    /**
      * Crea un nuevo usuario en la base de datos con información adicional.
      * @param user: Nombre de usuario.
      * @param name: Nombre completo del usuario.
