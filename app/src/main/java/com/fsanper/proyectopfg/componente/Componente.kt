@@ -54,11 +54,13 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.navigation.NavController
 import androidx.navigation.NavHostController
 import coil.compose.rememberImagePainter
 import com.fsanper.proyectopfg.R
 import com.fsanper.proyectopfg.modelo.menu.MenuItem
 import com.fsanper.proyectopfg.modelo.videojuego.VideoJuegosLista
+import com.fsanper.proyectopfg.navegacion.Pantallas
 import com.fsanper.proyectopfg.pantalla.login.LoginScreenViewModel
 
 /**
@@ -246,17 +248,17 @@ fun BackPressHandler(enabled: Boolean = true, onBackPressed: () -> Unit) {
 @Composable
 fun CardJuego(
     juego: VideoJuegosLista,
-    onClick: () -> Unit
-){
+    navController: NavController,
+    //onClick: () -> Unit
+) {
     Card(
         shape = RoundedCornerShape(4.dp),
         modifier = Modifier
             .padding(8.dp)
             .shadow(40.dp)
-            .clickable { onClick }
+            .clickable { navController.navigate("${Pantallas.GameScreen.name}/${juego.id}") }
     ){
         Column {
-            //InicioImagen(imagen = juego.imagen)
             val imagen = rememberImagePainter(data = juego.imagen)
 
             Image(
@@ -268,24 +270,10 @@ fun CardJuego(
                     .height(250.dp)
             )
 
+            Text(text = juego.id.toString())
             Text(text = juego.nombre)
             Text(text = juego.released)
+
         }
     }
-}
-
-@Composable
-fun InicioImagen(
-    imagen: String
-){
-    val imagen = rememberImagePainter(data = imagen)
-
-    Image(
-        painter = imagen,
-        contentDescription = null,
-        contentScale = ContentScale.Crop,
-        modifier = Modifier
-            .fillMaxWidth()
-            .height(250.dp)
-    )
 }

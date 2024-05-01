@@ -20,7 +20,7 @@ import com.fsanper.proyectopfg.viewModels.VideojuegosViewModel
 class MainActivity : ComponentActivity() {
     // Controlador de navegación para gestionar la navegación entre pantallas
     private lateinit var navController: NavHostController
-    val viewModel: VideojuegosViewModel by viewModels()
+    val juegoViewModel: VideojuegosViewModel by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -34,7 +34,7 @@ class MainActivity : ComponentActivity() {
                     navController = rememberNavController()
 
                     // Crear el gráfico de navegación y pasar el controlador de navegación y ViewModel de administrador
-                    NavGraph(navController = navController, viewModel = viewModel)
+                    NavGraph(navController = navController, juegoViewModel = juegoViewModel)
                 }
             }
         }
