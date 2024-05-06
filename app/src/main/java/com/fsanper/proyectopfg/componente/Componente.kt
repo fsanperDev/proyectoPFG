@@ -25,6 +25,8 @@ import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.filled.Logout
 import androidx.compose.material.icons.filled.Menu
 import androidx.compose.material3.Card
+import androidx.compose.material3.CardColors
+import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Divider
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
@@ -45,6 +47,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.shadow
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalLifecycleOwner
 import androidx.compose.ui.res.colorResource
@@ -71,6 +74,7 @@ import com.fsanper.proyectopfg.pantalla.login.LoginScreenViewModel
 @Composable
 fun MyTopBar(
     onMenuClick: () -> Unit,
+    titulo: String
 ) {
     TopAppBar(
         modifier = Modifier
@@ -96,7 +100,7 @@ fun MyTopBar(
                 horizontalArrangement = Arrangement.SpaceBetween
             ) {
                 Text(
-                    text = stringResource(R.string.home),
+                    text = titulo,
                     color = colorResource(id = R.color.cuerpo),
                     fontSize = 18.sp,
                     fontWeight = FontWeight.Bold
@@ -249,14 +253,17 @@ fun BackPressHandler(enabled: Boolean = true, onBackPressed: () -> Unit) {
 fun CardJuego(
     juego: VideoJuegosLista,
     navController: NavController,
-    //onClick: () -> Unit
 ) {
     Card(
         shape = RoundedCornerShape(4.dp),
         modifier = Modifier
             .padding(8.dp)
             .shadow(40.dp)
-            .clickable { navController.navigate("${Pantallas.GameScreen.name}/${juego.id}") }
+            .clickable { navController.navigate("${Pantallas.GameScreen.name}/${juego.id}") },
+        colors = CardDefaults.cardColors(
+            containerColor = colorResource(id = R.color.cuerpo),
+            contentColor = colorResource(id = R.color.menu)
+        )
     ){
         Column {
             val imagen = rememberImagePainter(data = juego.imagen)
@@ -269,10 +276,8 @@ fun CardJuego(
                     .fillMaxWidth()
                     .height(250.dp)
             )
-
-            Text(text = juego.id.toString())
-            Text(text = juego.nombre)
-            Text(text = juego.released)
+            Text(text = juego.nombre, fontWeight = FontWeight.Bold)
+            Text(text = juego.released, fontWeight = FontWeight.Bold)
 
         }
     }

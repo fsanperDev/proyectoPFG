@@ -83,8 +83,7 @@ fun LoginScreen(
 
     // Diseño de la superficie que ocupa toda la pantalla
     Surface(
-        modifier = Modifier.fillMaxSize(),
-        color = colorResource(id = R.color.cuerpo)
+        modifier = Modifier.fillMaxSize()
     ) {
         // Columna que organiza los elementos en una disposición vertical y centrada
         Column(
@@ -100,7 +99,7 @@ fun LoginScreen(
                 modifier = Modifier
                     .size(150.dp)
                     .border(
-                        BorderStroke(borderWidth, colorResource(id = R.color.cuerpo)),
+                        BorderStroke(borderWidth, colorResource(id = R.color.menu)),
                         CircleShape
                     )
                     .padding(borderWidth)
@@ -190,8 +189,7 @@ fun ForgottenPassword(
                 .height(300.dp)
                 .padding(16.dp),
             colors = CardDefaults.cardColors(
-                containerColor = colorResource(id = R.color.boton),
-                contentColor = colorResource(id = R.color.cuerpo)
+                contentColor = colorResource(id = R.color.menu)
             )
         ) {
             Column(
@@ -201,7 +199,7 @@ fun ForgottenPassword(
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
                 // Texto explicativo
-                Text(text = "Introduce your Email")
+                Text(text = "Introduce tu email", fontWeight = FontWeight.Bold)
 
                 // Campo de texto para ingresar la dirección de correo electrónico
                 OutlinedTextField(
@@ -212,13 +210,11 @@ fun ForgottenPassword(
                         .padding(start = 16.dp, end = 16.dp, top = 25.dp),
                     placeholder = {
                         Text(
-                            text = "Email address",
-                            color = colorResource(id = R.color.cuerpo)
+                            text = "Email address"
                         )
                     },
                     colors = TextFieldDefaults.textFieldColors(
-                        textColor = colorResource(id = R.color.cuerpo),
-                        containerColor = colorResource(id = R.color.boton)
+                        textColor = colorResource(id = R.color.menu),
                     )
 
                 )
@@ -398,7 +394,7 @@ fun SubmitButton(
         shape = CircleShape,
         enabled = inputValido,
         colors = ButtonDefaults.buttonColors(
-            containerColor = colorResource(id = R.color.boton),
+            containerColor = colorResource(id = R.color.menu),
             contentColor = colorResource(id = R.color.cuerpo)
         )
     ) {

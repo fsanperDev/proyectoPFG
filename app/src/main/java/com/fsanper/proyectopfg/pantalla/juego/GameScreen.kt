@@ -1,8 +1,10 @@
 package com.fsanper.proyectopfg.pantalla.juego
 
+import android.util.Log
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -10,36 +12,57 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.Button
+import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.DrawerValue
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.LocalTextStyle
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.ModalNavigationDrawer
+import androidx.compose.material3.OutlinedCard
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextField
 import androidx.compose.material3.rememberDrawerState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.internal.illegalDecoyCallException
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
-import androidx.compose.ui.Alignment
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.colorResource
+import androidx.compose.ui.text.font.FontStyle
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.input.TextFieldValue
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import androidx.core.text.HtmlCompat
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import coil.compose.rememberImagePainter
 import com.fsanper.proyectopfg.R
 import com.fsanper.proyectopfg.componente.MyDrawerContent
 import com.fsanper.proyectopfg.componente.MyTopBar
+import com.fsanper.proyectopfg.modelo.comentario.Comentario
+import com.fsanper.proyectopfg.modelo.firebase.ComentarioViewModel
+import com.fsanper.proyectopfg.modelo.usuario.Usuario
+import com.fsanper.proyectopfg.modelo.videojuego.DetallesJuego
+import com.fsanper.proyectopfg.navegacion.Pantallas
 import com.fsanper.proyectopfg.viewModels.VideojuegosViewModel
+import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.firestore.Query
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
@@ -91,7 +114,8 @@ fun GameScreen(
                         scope.launch {
                             drawerState.open()
                         }
-                    }
+                    },
+                    titulo = "Videojuego"
                 )
             },
             containerColor = colorResource(id = R.color.cuerpo)
@@ -99,8 +123,7 @@ fun GameScreen(
             Surface(
                 modifier = Modifier
                     .fillMaxSize()
-                    .padding(paddingValues),
-                color = colorResource(id = R.color.cuerpo)
+                    .padding(paddingValues)
             ) {
                 Column(
                     modifier = Modifier
@@ -108,8 +131,11 @@ fun GameScreen(
                         .fillMaxSize()
                         .padding(16.dp)
                 ) {
-                    Contenido(id = juegoId, juegoViewModel = juegoViewModel)
-                    CuadroComentarios()
+                    Contenido(
+                        id = juegoId,
+                        juegoViewModel = juegoViewModel,
+                        navController = navController
+                    )
                 }
             }
         }
@@ -125,8 +151,9 @@ fun GameScreen(
 @Composable
 fun Contenido(
     id: Int,
-    juegoViewModel: VideojuegosViewModel
-){
+    juegoViewModel: VideojuegosViewModel,
+    navController: NavHostController
+) {
 // Observa el detalle del juego utilizando el ViewModel
     val detalleJuego by juegoViewModel.detalleJuego.collectAsState()
 
@@ -148,18 +175,162 @@ fun Contenido(
         )
         Text(text = juego.nombre, style = MaterialTheme.typography.titleLarge)
         Spacer(modifier = Modifier.height(16.dp))
-        Text(text = "Descripción: ${juego.descripcion}", style = MaterialTheme.typography.bodyMedium)
+        val descripcion = HtmlCompat.fromHtml(juego.descripcion, HtmlCompat.FROM_HTML_MODE_COMPACT)
+        Text(text = "Descripción:", style = MaterialTheme.typography.titleMedium)
+        Text(text = "${descripcion}", style = MaterialTheme.typography.bodyMedium)
         Spacer(modifier = Modifier.height(16.dp))
-        Text(text = "Lanzamiento: ${juego.lanzamiento}", style = MaterialTheme.typography.bodyMedium)
+        Text(
+            text = "Lanzamiento:",
+            style = MaterialTheme.typography.titleMedium
+        )
+        Text(text = "${juego.lanzamiento}", style = MaterialTheme.typography.bodyMedium)
         Spacer(modifier = Modifier.height(16.dp))
         //Text(text = "Plataformas: ${juego.plataforma.joinToString(", ")}", style = MaterialTheme.typography.bodyMedium)
         Spacer(modifier = Modifier.height(16.dp))
         // Aquí puedes agregar la lógica para mostrar la imagen del juego
         // Image(...)
+        CuadroComentarios(
+            nombreJuego = juego.nombre,
+            usuario = "pepe",
+            navController = navController
+        )
+    }
+}
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun CuadroComentarios(
+    comentario: ComentarioViewModel = viewModel(),
+    nombreJuego: String,
+    usuario: String,
+    navController: NavHostController
+) {
+    var comentarios: List<Comentario> by remember { mutableStateOf(emptyList()) }
+    var comentarioUsuario: String by remember { mutableStateOf("") }
+    val context = LocalContext.current
+
+    Text(
+        text = "Tablon de comentario ${nombreJuego}",
+        textAlign = TextAlign.Center,
+        fontWeight = FontWeight.ExtraBold
+    )
+
+    LaunchedEffect(nombreJuego) {
+        ObtenerComentariosFirestore(nombreJuego) { listaComentario ->
+            comentarios = listaComentario
+        }
+    }
+
+    if (comentarios.isEmpty()) {
+        Text(text = "No se han registrado ningún comentario para este juego.")
+    } else {
+        comentarios.forEach { comment ->
+            CardComentario(usuario = comment.usuario, contenido = comment.comentario)
+        }
+    }
+
+    TextField(
+        value = comentarioUsuario,
+        onValueChange = { comentarioUsuario = it },
+        modifier = Modifier
+            .fillMaxWidth()
+            .height(200.dp),
+        textStyle = LocalTextStyle.current.copy(
+            fontSize = MaterialTheme.typography.bodyMedium.fontSize
+        ),
+        maxLines = 10,
+        label = { Text("Comentario") }
+    )
+
+    Button(
+        onClick = {
+            obtenerUltimoId { ultimoID ->
+                val nuevoComentario = Comentario(
+                    idComentario = ultimoID + 1,
+                    nombreJuego = nombreJuego,
+                    comentario = comentarioUsuario,
+                    usuario = usuario,
+                )
+                comentario.saveCompra(
+                    navController = navController,
+                    comentario = nuevoComentario,
+                    context = context
+                )
+            }
+        }
+    ) {
+        Text("Enviar")
     }
 }
 
 @Composable
-fun CuadroComentarios(){
-    Text(text = "Esto será para un formulario para los comentario y visualizarlos")
+fun CardComentario(
+    usuario: String,
+    contenido: String
+) {
+    OutlinedCard(
+        shape = RoundedCornerShape(4.dp),
+        modifier = Modifier
+            .padding(8.dp)
+            .shadow(40.dp),
+        border = BorderStroke(1.5.dp, colorResource(id = R.color.menu))
+    ) {
+        Column(modifier = Modifier.padding(5.dp)) {
+            Text(text = "Usuario:", fontWeight = FontWeight.Bold)
+            Text(text = "${usuario}")
+            Text(text = "Comentario:", fontWeight = FontWeight.Bold)
+            Text(text = "${contenido}")
+
+        }
+    }
+}
+
+fun ObtenerComentariosFirestore(nombreJuego: String, callback: (List<Comentario>) -> Unit) {
+    val comentariosList = mutableListOf<Comentario>()
+
+    // Referencia a la colección "comentario" en Firestore
+    val query = FirebaseFirestore.getInstance().collection("comentario")
+        .whereEqualTo("nombreJuego", nombreJuego) // Filtrar por nombre de juego específico
+
+    query.get().addOnCompleteListener { task ->
+        if (task.isSuccessful) {
+            // Procesar documentos y construir la lista de comentarios
+            for (document in task.result!!.documents) {
+                val comentario = document.toObject(Comentario::class.java)
+                comentario?.let { comentariosList.add(it) }
+            }
+            // Llamar a la función de devolución de llamada con la lista de comentarios
+            callback(comentariosList)
+        } else {
+            // Manejar errores
+            val exception = task.exception
+            Log.w(
+                "ObtenerComentariosPorJuegoFirestore",
+                "Error fetching data: ${exception?.message}"
+            )
+        }
+    }
+}
+
+fun obtenerUltimoId(callback: (Long) -> Unit) {
+    val query = FirebaseFirestore.getInstance()
+        .collection("comentario")
+        .orderBy("idComentario", Query.Direction.DESCENDING)
+        .limit(1)
+
+    query.get().addOnCompleteListener { task ->
+        if (task.isSuccessful) {
+            // Obtener el último documento y extraer el ID
+            val ultimaCompra = task.result!!.documents.firstOrNull()
+            val ultimoId = ultimaCompra?.getLong("idComentario") ?: 0L
+            // Llamar a la función de devolución de llamada con el último ID
+            callback(ultimoId)
+        } else {
+            // Manejar errores, como la falta de conexión a Internet
+            val exception = task.exception
+            Log.w("obtenerUltimoId", "Error fetching data: ${exception?.message}")
+            // Proporcionar otro valor predeterminado en caso de error
+            callback(0)
+        }
+    }
 }

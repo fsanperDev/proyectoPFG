@@ -41,9 +41,6 @@ fun NavGraph(
         composable(Pantallas.HomeScreen.name) {
             HomeScreen(navController = navController, juegoViewModel = juegoViewModel)
         }
-        /*composable(Pantallas.GameScreen.name) {
-            GameScreen(navController = navController, juegoViewModel = juegoViewModel)
-        }*/
         composable(
             route = "${Pantallas.GameScreen.name}/{juegoId}",
             arguments = listOf(navArgument("juegoId") { type = NavType.IntType })

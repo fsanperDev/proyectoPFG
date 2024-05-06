@@ -70,8 +70,7 @@ fun SplashScreen(navController: NavController) {
     // Diseño de columna principal que ocupa toda la pantalla
     Column(
         modifier = Modifier
-            .fillMaxSize()
-            .background(colorResource(id = R.color.cuerpo)),
+            .fillMaxSize(),
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
@@ -84,8 +83,6 @@ fun SplashScreen(navController: NavController) {
         ) {
             // Columna interna con la imagen del logo dentro de un círculo con borde
             Column(
-                modifier = Modifier
-                    .background(colorResource(id = R.color.cuerpo)),
                 verticalArrangement = Arrangement.Center,
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
@@ -97,7 +94,7 @@ fun SplashScreen(navController: NavController) {
                     modifier = Modifier
                         .size(500.dp)
                         .border(
-                            BorderStroke(borderWidth, colorResource(id = R.color.cuerpo)),
+                            BorderStroke(borderWidth, colorResource(id = R.color.menu)),
                             CircleShape
                         )
                         .padding(borderWidth)

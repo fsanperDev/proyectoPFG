@@ -90,7 +90,8 @@ fun HomeScreen(
                         scope.launch {
                             drawerState.open()
                         }
-                    }
+                    },
+                    titulo = "Inicio"
                 )
             },
             containerColor = colorResource(id = R.color.cuerpo)
@@ -98,8 +99,7 @@ fun HomeScreen(
             Surface(
                 modifier = Modifier
                     .fillMaxSize()
-                    .padding(paddingValues),
-                color = colorResource(id = R.color.cuerpo)
+                    .padding(paddingValues)
             ) {
                 Contenido(navController = navController, juegoViewModel = juegoViewModel)
             }
