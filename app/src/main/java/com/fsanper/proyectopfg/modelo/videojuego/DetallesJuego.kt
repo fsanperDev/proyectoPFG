@@ -9,12 +9,18 @@ data class DetallesJuego(
     val descripcion: String,
     @SerializedName("released")
     val lanzamiento: String,
-    /*@SerializedName("platforms")
-    val plataforma: List<Plataforma>,*/
     @SerializedName("background_image")
-    val imagen: String
+    val imagen: String,
+    @SerializedName("platforms")
+    val plataformas: List<Plataforma> // Lista de plataformas del juego
 )
 
-/*data class Plataforma(
+data class Plataforma(
+    @SerializedName("platform")
+    val plataforma: PlatformaDetalle
+)
 
-)*/
+data class PlatformaDetalle(
+    @SerializedName("name")
+    val nombre: String
+)

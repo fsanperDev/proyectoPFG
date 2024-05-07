@@ -34,6 +34,7 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.ModalDrawerSheet
 import androidx.compose.material3.NavigationDrawerItem
+import androidx.compose.material3.OutlinedCard
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
@@ -278,6 +279,28 @@ fun CardJuego(
             )
             Text(text = juego.nombre, fontWeight = FontWeight.Bold)
             Text(text = juego.released, fontWeight = FontWeight.Bold)
+
+        }
+    }
+}
+
+@Composable
+fun CardComentario(
+    usuario: String,
+    contenido: String
+) {
+    OutlinedCard(
+        shape = RoundedCornerShape(4.dp),
+        modifier = Modifier
+            .padding(8.dp)
+            .shadow(40.dp),
+        border = BorderStroke(1.5.dp, colorResource(id = R.color.menu))
+    ) {
+        Column(modifier = Modifier.padding(5.dp)) {
+            Text(text = "Usuario:", fontWeight = FontWeight.Bold)
+            Text(text = "${usuario}")
+            Text(text = "Comentario:", fontWeight = FontWeight.Bold)
+            Text(text = "${contenido}")
 
         }
     }

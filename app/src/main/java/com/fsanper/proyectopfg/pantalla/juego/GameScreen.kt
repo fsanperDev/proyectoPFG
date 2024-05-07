@@ -12,9 +12,11 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.DrawerValue
@@ -37,6 +39,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.shadow
@@ -53,6 +56,7 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import coil.compose.rememberImagePainter
 import com.fsanper.proyectopfg.R
+import com.fsanper.proyectopfg.componente.CardComentario
 import com.fsanper.proyectopfg.componente.MyDrawerContent
 import com.fsanper.proyectopfg.componente.MyTopBar
 import com.fsanper.proyectopfg.modelo.comentario.Comentario
@@ -154,15 +158,17 @@ fun Contenido(
     juegoViewModel: VideojuegosViewModel,
     navController: NavHostController
 ) {
-// Observa el detalle del juego utilizando el ViewModel
     val detalleJuego by juegoViewModel.detalleJuego.collectAsState()
 
-    // Obtener detalles del juego cuando se lanza la pantalla
     LaunchedEffect(id) {
         juegoViewModel.obtenerDetallesJuego(id)
     }
 
-    // Renderizar la pantalla con los detalles del juego
+    ImprimirInformacion(detalleJuego = detalleJuego, navController = navController)
+}
+
+@Composable
+fun ImprimirInformacion(detalleJuego: DetallesJuego?, navController: NavHostController) {
     detalleJuego?.let { juego ->
         val imagen = rememberImagePainter(data = juego.imagen)
         Image(
@@ -179,16 +185,17 @@ fun Contenido(
         Text(text = "Descripción:", style = MaterialTheme.typography.titleMedium)
         Text(text = "${descripcion}", style = MaterialTheme.typography.bodyMedium)
         Spacer(modifier = Modifier.height(16.dp))
-        Text(
-            text = "Lanzamiento:",
-            style = MaterialTheme.typography.titleMedium
-        )
+        Text(text = "Lanzamiento:", style = MaterialTheme.typography.titleMedium)
         Text(text = "${juego.lanzamiento}", style = MaterialTheme.typography.bodyMedium)
         Spacer(modifier = Modifier.height(16.dp))
-        //Text(text = "Plataformas: ${juego.plataforma.joinToString(", ")}", style = MaterialTheme.typography.bodyMedium)
+        Text(text = "Plataformas:", style = MaterialTheme.typography.titleMedium)
+        juego.plataformas.forEach { plataforma ->
+            Text(
+                text = "- ${plataforma.plataforma.nombre}",
+                style = MaterialTheme.typography.bodyMedium
+            )
+        }
         Spacer(modifier = Modifier.height(16.dp))
-        // Aquí puedes agregar la lógica para mostrar la imagen del juego
-        // Image(...)
         CuadroComentarios(
             nombreJuego = juego.nombre,
             usuario = "pepe",
@@ -206,8 +213,11 @@ fun CuadroComentarios(
     navController: NavHostController
 ) {
     var comentarios: List<Comentario> by remember { mutableStateOf(emptyList()) }
-    var comentarioUsuario: String by remember { mutableStateOf("") }
+    var comentarioUsuario = rememberSaveable { mutableStateOf("") }
     val context = LocalContext.current
+    val valido = remember(comentarioUsuario.value) {
+        comentarioUsuario.value.trim().isNotBlank()
+    }
 
     Text(
         text = "Tablon de comentario ${nombreJuego}",
@@ -230,8 +240,8 @@ fun CuadroComentarios(
     }
 
     TextField(
-        value = comentarioUsuario,
-        onValueChange = { comentarioUsuario = it },
+        value = comentarioUsuario.value,
+        onValueChange = { comentarioUsuario.value = it },
         modifier = Modifier
             .fillMaxWidth()
             .height(200.dp),
@@ -243,12 +253,21 @@ fun CuadroComentarios(
     )
 
     Button(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(3.dp),
+        shape = CircleShape,
+        enabled = valido,
+        colors = ButtonDefaults.buttonColors(
+            containerColor = colorResource(id = R.color.menu),
+            contentColor = colorResource(id = R.color.cuerpo)
+        ),
         onClick = {
             obtenerUltimoId { ultimoID ->
                 val nuevoComentario = Comentario(
                     idComentario = ultimoID + 1,
                     nombreJuego = nombreJuego,
-                    comentario = comentarioUsuario,
+                    comentario = comentarioUsuario.value,
                     usuario = usuario,
                 )
                 comentario.saveCompra(
@@ -260,28 +279,6 @@ fun CuadroComentarios(
         }
     ) {
         Text("Enviar")
-    }
-}
-
-@Composable
-fun CardComentario(
-    usuario: String,
-    contenido: String
-) {
-    OutlinedCard(
-        shape = RoundedCornerShape(4.dp),
-        modifier = Modifier
-            .padding(8.dp)
-            .shadow(40.dp),
-        border = BorderStroke(1.5.dp, colorResource(id = R.color.menu))
-    ) {
-        Column(modifier = Modifier.padding(5.dp)) {
-            Text(text = "Usuario:", fontWeight = FontWeight.Bold)
-            Text(text = "${usuario}")
-            Text(text = "Comentario:", fontWeight = FontWeight.Bold)
-            Text(text = "${contenido}")
-
-        }
     }
 }
 
