@@ -286,7 +286,6 @@ fun CardJuego(
 
 @Composable
 fun CardComentario(
-    usuario: String,
     contenido: String
 ) {
     OutlinedCard(
@@ -297,8 +296,6 @@ fun CardComentario(
         border = BorderStroke(1.5.dp, colorResource(id = R.color.menu))
     ) {
         Column(modifier = Modifier.padding(5.dp)) {
-            Text(text = "Usuario:", fontWeight = FontWeight.Bold)
-            Text(text = "${usuario}")
             Text(text = "Comentario:", fontWeight = FontWeight.Bold)
             Text(text = "${contenido}")
 

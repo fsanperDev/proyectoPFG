@@ -25,7 +25,7 @@ class ComentarioViewModel: ViewModel() {
         context: Context
     ) = CoroutineScope(Dispatchers.IO).launch {
         val fireStoreRef = Firebase.firestore
-            .collection("comentario")
+            .collection("comentarios")
             .document(comentario.idComentario.toString())
 
         try {

@@ -65,6 +65,8 @@ import com.fsanper.proyectopfg.modelo.usuario.Usuario
 import com.fsanper.proyectopfg.modelo.videojuego.DetallesJuego
 import com.fsanper.proyectopfg.navegacion.Pantallas
 import com.fsanper.proyectopfg.viewModels.VideojuegosViewModel
+import com.google.firebase.Firebase
+import com.google.firebase.auth.auth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.Query
 import kotlinx.coroutines.delay
@@ -198,7 +200,6 @@ fun ImprimirInformacion(detalleJuego: DetallesJuego?, navController: NavHostCont
         Spacer(modifier = Modifier.height(16.dp))
         CuadroComentarios(
             nombreJuego = juego.nombre,
-            usuario = "pepe",
             navController = navController
         )
     }
@@ -209,7 +210,6 @@ fun ImprimirInformacion(detalleJuego: DetallesJuego?, navController: NavHostCont
 fun CuadroComentarios(
     comentario: ComentarioViewModel = viewModel(),
     nombreJuego: String,
-    usuario: String,
     navController: NavHostController
 ) {
     var comentarios: List<Comentario> by remember { mutableStateOf(emptyList()) }
@@ -235,7 +235,7 @@ fun CuadroComentarios(
         Text(text = "No se han registrado ningún comentario para este juego.")
     } else {
         comentarios.forEach { comment ->
-            CardComentario(usuario = comment.usuario, contenido = comment.comentario)
+            CardComentario(contenido = comment.comentario)
         }
     }
 
@@ -267,8 +267,7 @@ fun CuadroComentarios(
                 val nuevoComentario = Comentario(
                     idComentario = ultimoID + 1,
                     nombreJuego = nombreJuego,
-                    comentario = comentarioUsuario.value,
-                    usuario = usuario,
+                    comentario = comentarioUsuario.value
                 )
                 comentario.saveCompra(
                     navController = navController,
@@ -286,7 +285,7 @@ fun ObtenerComentariosFirestore(nombreJuego: String, callback: (List<Comentario>
     val comentariosList = mutableListOf<Comentario>()
 
     // Referencia a la colección "comentario" en Firestore
-    val query = FirebaseFirestore.getInstance().collection("comentario")
+    val query = FirebaseFirestore.getInstance().collection("comentarios")
         .whereEqualTo("nombreJuego", nombreJuego) // Filtrar por nombre de juego específico
 
     query.get().addOnCompleteListener { task ->
@@ -311,7 +310,7 @@ fun ObtenerComentariosFirestore(nombreJuego: String, callback: (List<Comentario>
 
 fun obtenerUltimoId(callback: (Long) -> Unit) {
     val query = FirebaseFirestore.getInstance()
-        .collection("comentario")
+        .collection("comentarios")
         .orderBy("idComentario", Query.Direction.DESCENDING)
         .limit(1)
 

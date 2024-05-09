@@ -1,5 +1,6 @@
 package com.fsanper.proyectopfg.pantalla.login
 
+import android.content.ContentValues.TAG
 import android.util.Log
 import android.util.Patterns
 import android.widget.Toast
@@ -66,7 +67,9 @@ import com.fsanper.proyectopfg.navegacion.Pantallas
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions
 import com.google.android.gms.common.api.ApiException
+import com.google.firebase.Firebase
 import com.google.firebase.auth.GoogleAuthProvider
+import com.google.firebase.auth.auth
 
 @Composable
 fun LoginScreen(
@@ -242,6 +245,12 @@ fun ForgottenPassword(
                             onConfirmation()
                             // Se muestra un mensaje Toast al usuario
                             Toast.makeText(context, "Se ha enviado un mensaje a su email", Toast.LENGTH_SHORT).show()
+                            Firebase.auth.sendPasswordResetEmail(email)
+                                .addOnCompleteListener { task ->
+                                    if (task.isSuccessful) {
+                                        Log.d(TAG, "Email sent.")
+                                    }
+                                }
                         },
                         modifier = Modifier.padding(8.dp),
                         colors = ButtonDefaults.buttonColors(

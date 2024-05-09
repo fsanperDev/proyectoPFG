@@ -90,12 +90,11 @@ class LoginScreenViewModel : ViewModel() {
             user = user,
             name = name,
             email = email,
-            password = hashedPassword,
-            id = null
+            password = hashedPassword
         )
 
         FirebaseFirestore.getInstance()
-            .collection("users")
+            .collection("usuarios")
             .add(userObject)
             .addOnSuccessListener {
                 Log.d("MyLogin", "Creado ${it.id}")
