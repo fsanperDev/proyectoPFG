@@ -48,6 +48,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
@@ -102,7 +103,7 @@ fun LoginScreen(
                 modifier = Modifier
                     .size(150.dp)
                     .border(
-                        BorderStroke(borderWidth, colorResource(id = R.color.menu)),
+                        BorderStroke(borderWidth, colorResource(id = R.color.cuerpo)),
                         CircleShape
                     )
                     .padding(borderWidth)
@@ -159,7 +160,7 @@ fun LoginScreen(
                     modifier = Modifier
                         .clickable { showLoginForm.value = !showLoginForm.value }
                         .padding(start = 5.dp),
-                    color = colorResource(id = R.color.menu)
+                    color = colorResource(id = R.color.cuerpo)
                 )
             }
         }
@@ -192,7 +193,7 @@ fun ForgottenPassword(
                 .height(300.dp)
                 .padding(16.dp),
             colors = CardDefaults.cardColors(
-                contentColor = colorResource(id = R.color.menu)
+                contentColor = colorResource(id = R.color.cuerpo)
             )
         ) {
             Column(
@@ -217,7 +218,7 @@ fun ForgottenPassword(
                         )
                     },
                     colors = TextFieldDefaults.textFieldColors(
-                        textColor = colorResource(id = R.color.menu),
+                        textColor = colorResource(id = R.color.cuerpo),
                     )
 
                 )
@@ -232,8 +233,8 @@ fun ForgottenPassword(
                         onClick = { onDimissRequest() },
                         modifier = Modifier.padding(8.dp),
                         colors = ButtonDefaults.buttonColors(
-                            contentColor = colorResource(id = R.color.cuerpo),
-                            containerColor = colorResource(id = R.color.menu)
+                            contentColor = Color.White,
+                            containerColor = colorResource(id = R.color.cuerpo)
                         )
                     ) {
                         Text("Cancelar")
@@ -254,8 +255,8 @@ fun ForgottenPassword(
                         },
                         modifier = Modifier.padding(8.dp),
                         colors = ButtonDefaults.buttonColors(
-                            contentColor = colorResource(id = R.color.cuerpo),
-                            containerColor = colorResource(id = R.color.menu)
+                            contentColor = Color.White,
+                            containerColor = colorResource(id = R.color.cuerpo)
                         ),
                         enabled = enviarEnable // Se habilita o deshabilita según la validez del correo electrónico
                     ) {
@@ -363,7 +364,7 @@ fun UserForm(
             Text(
                 text = "Forgotten password?",
                 fontSize = 12.sp,
-                color = colorResource(id = R.color.menu)
+                color = colorResource(id = R.color.cuerpo)
             )
         }
 
@@ -403,7 +404,7 @@ fun SubmitButton(
         shape = CircleShape,
         enabled = inputValido,
         colors = ButtonDefaults.buttonColors(
-            containerColor = colorResource(id = R.color.menu),
+            containerColor = colorResource(id = R.color.boton),
             contentColor = colorResource(id = R.color.cuerpo)
         )
     ) {

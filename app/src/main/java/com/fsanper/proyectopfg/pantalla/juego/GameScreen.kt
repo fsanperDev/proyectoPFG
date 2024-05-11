@@ -43,6 +43,7 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.shadow
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.colorResource
@@ -103,7 +104,7 @@ fun GameScreen(
                         }
                     }
                 },
-                modifier = Modifier.background(colorResource(id = R.color.boton)),
+                modifier = Modifier.background(colorResource(id = R.color.cuerpo)),
                 navController = navController
             )
         },
@@ -138,7 +139,7 @@ fun GameScreen(
                         .padding(16.dp)
                 ) {
                     Contenido(
-                        id = juegoId,
+                        idJuego = juegoId,
                         juegoViewModel = juegoViewModel,
                         navController = navController
                     )
@@ -156,22 +157,31 @@ fun GameScreen(
 
 @Composable
 fun Contenido(
-    id: Int,
+    idJuego: Int,
     juegoViewModel: VideojuegosViewModel,
     navController: NavHostController
 ) {
     val detalleJuego by juegoViewModel.detalleJuego.collectAsState()
 
-    LaunchedEffect(id) {
-        juegoViewModel.obtenerDetallesJuego(id)
+    LaunchedEffect(idJuego) {
+        juegoViewModel.obtenerDetallesJuego(idJuego)
     }
 
-    ImprimirInformacion(detalleJuego = detalleJuego, navController = navController)
+    ImprimirInformacion(
+        detalleJuego = detalleJuego,
+        navController = navController,
+        idJuego = idJuego
+    )
 }
 
 @Composable
-fun ImprimirInformacion(detalleJuego: DetallesJuego?, navController: NavHostController) {
+fun ImprimirInformacion(
+    detalleJuego: DetallesJuego?,
+    navController: NavHostController,
+    idJuego: Int
+) {
     detalleJuego?.let { juego ->
+        val idCorreo = Firebase.auth.currentUser?.uid
         val imagen = rememberImagePainter(data = juego.imagen)
         Image(
             painter = imagen,
@@ -181,7 +191,7 @@ fun ImprimirInformacion(detalleJuego: DetallesJuego?, navController: NavHostCont
                 .fillMaxWidth()
                 .height(250.dp)
         )
-        Text(text = juego.nombre, style = MaterialTheme.typography.titleLarge)
+        Text(text = juego.nombre, style = MaterialTheme.typography.titleLarge, fontWeight = FontWeight.ExtraBold)
         Spacer(modifier = Modifier.height(16.dp))
         val descripcion = HtmlCompat.fromHtml(juego.descripcion, HtmlCompat.FROM_HTML_MODE_COMPACT)
         Text(text = "Descripción:", style = MaterialTheme.typography.titleMedium)
@@ -200,7 +210,9 @@ fun ImprimirInformacion(detalleJuego: DetallesJuego?, navController: NavHostCont
         Spacer(modifier = Modifier.height(16.dp))
         CuadroComentarios(
             nombreJuego = juego.nombre,
-            navController = navController
+            navController = navController,
+            idCorreo = idCorreo.toString(),
+            idJuego = idJuego
         )
     }
 }
@@ -210,7 +222,9 @@ fun ImprimirInformacion(detalleJuego: DetallesJuego?, navController: NavHostCont
 fun CuadroComentarios(
     comentario: ComentarioViewModel = viewModel(),
     nombreJuego: String,
-    navController: NavHostController
+    navController: NavHostController,
+    idCorreo: String,
+    idJuego: Int
 ) {
     var comentarios: List<Comentario> by remember { mutableStateOf(emptyList()) }
     var comentarioUsuario = rememberSaveable { mutableStateOf("") }
@@ -235,7 +249,7 @@ fun CuadroComentarios(
         Text(text = "No se han registrado ningún comentario para este juego.")
     } else {
         comentarios.forEach { comment ->
-            CardComentario(contenido = comment.comentario)
+            CardComentario(contenido = comment.comentario, usuario = comment.usuario)
         }
     }
 
@@ -259,7 +273,7 @@ fun CuadroComentarios(
         shape = CircleShape,
         enabled = valido,
         colors = ButtonDefaults.buttonColors(
-            containerColor = colorResource(id = R.color.menu),
+            containerColor = colorResource(id = R.color.boton),
             contentColor = colorResource(id = R.color.cuerpo)
         ),
         onClick = {
@@ -267,17 +281,20 @@ fun CuadroComentarios(
                 val nuevoComentario = Comentario(
                     idComentario = ultimoID + 1,
                     nombreJuego = nombreJuego,
-                    comentario = comentarioUsuario.value
+                    comentario = comentarioUsuario.value,
+                    usuario = "Anonimo",
+                    idCorreo = idCorreo
                 )
                 comentario.saveCompra(
                     navController = navController,
                     comentario = nuevoComentario,
-                    context = context
+                    context = context,
+                    idJuego = idJuego
                 )
             }
         }
     ) {
-        Text("Enviar")
+        Text("Enviar Comentario")
     }
 }
 

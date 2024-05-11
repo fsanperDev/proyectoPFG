@@ -94,7 +94,7 @@ fun SplashScreen(navController: NavController) {
                     modifier = Modifier
                         .size(500.dp)
                         .border(
-                            BorderStroke(borderWidth, colorResource(id = R.color.menu)),
+                            BorderStroke(borderWidth, colorResource(id = R.color.cuerpo)),
                             CircleShape
                         )
                         .padding(borderWidth)
@@ -112,7 +112,7 @@ fun SplashScreen(navController: NavController) {
             Spacer(modifier = Modifier.height(10.dp))
             LinearProgressIndicator(
                 modifier = Modifier.width(300.dp),
-                color = colorResource(id = R.color.menu)
+                color = colorResource(id = R.color.cuerpo)
             )
         }
     }

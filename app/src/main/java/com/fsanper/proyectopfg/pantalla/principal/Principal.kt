@@ -7,6 +7,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.DrawerValue
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -73,7 +74,7 @@ fun HomeScreen(
                         }
                     }
                 },
-                modifier = Modifier.background(colorResource(id = R.color.boton)),
+                modifier = Modifier.background(colorResource(id = R.color.cuerpo)),
                 navController = navController
             )
         },
@@ -94,7 +95,7 @@ fun HomeScreen(
                     titulo = "Inicio"
                 )
             },
-            containerColor = colorResource(id = R.color.cuerpo)
+            containerColor = colorResource(id = R.color.boton)
         ) { paddingValues ->
             Surface(
                 modifier = Modifier
@@ -140,11 +141,15 @@ fun Contenido(
                     onClick = { juegoViewModel.loadMore() }, // Llama a la función para cargar más juegos
                     modifier = Modifier
                         .fillMaxWidth()
-                        .padding(vertical = 8.dp, horizontal = 16.dp)
+                        .padding(vertical = 8.dp, horizontal = 16.dp),
+                    colors = ButtonDefaults.buttonColors(
+                        containerColor = colorResource(id = R.color.boton),
+                        contentColor = Color.White
+                    )
                 ) {
                     Text(
                         text = "Cargar más",
-                        color = Color.White
+                        color = colorResource(id = R.color.cuerpo)
                     )
                 }
             }

@@ -22,7 +22,8 @@ class ComentarioViewModel: ViewModel() {
     fun saveCompra(
         navController: NavHostController,
         comentario: Comentario,
-        context: Context
+        context: Context,
+        idJuego: Int
     ) = CoroutineScope(Dispatchers.IO).launch {
         val fireStoreRef = Firebase.firestore
             .collection("comentarios")
@@ -31,7 +32,7 @@ class ComentarioViewModel: ViewModel() {
         try {
             fireStoreRef.set(comentario)
                 .addOnSuccessListener {
-                    navController.navigate(Pantallas.HomeScreen.name)
+                    navController.navigate("${Pantallas.GameScreen.name}/${idJuego}")
                 }
         } catch (e: Exception) {
             Toast.makeText(context, e.message, Toast.LENGTH_SHORT).show()

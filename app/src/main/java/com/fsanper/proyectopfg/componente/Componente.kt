@@ -11,6 +11,7 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -79,8 +80,7 @@ fun MyTopBar(
 ) {
     TopAppBar(
         modifier = Modifier
-            .fillMaxWidth()
-            .background(colorResource(id = R.color.boton)),
+            .fillMaxWidth(),
         navigationIcon = {
             // Icono de menú
             IconButton(onClick = {
@@ -89,7 +89,7 @@ fun MyTopBar(
                 Icon(
                     imageVector = Icons.Default.Menu,
                     contentDescription = stringResource(R.string.menu),
-                    tint = colorResource(id = R.color.cuerpo),
+                    tint = colorResource(id = R.color.boton),
                 )
             }
         },
@@ -102,14 +102,14 @@ fun MyTopBar(
             ) {
                 Text(
                     text = titulo,
-                    color = colorResource(id = R.color.cuerpo),
+                    color = colorResource(id = R.color.boton),
                     fontSize = 18.sp,
                     fontWeight = FontWeight.Bold
                 )
             }
         },
         colors = TopAppBarDefaults.centerAlignedTopAppBarColors(
-            containerColor = colorResource(id = R.color.menu)
+            containerColor = colorResource(id = R.color.cuerpo)
         )
     )
 }
@@ -152,7 +152,7 @@ fun MyDrawerContent(
                 modifier = Modifier
                     .height(190.dp)
                     .fillMaxWidth()
-                    .background(colorResource(id = R.color.boton)),
+                    .background(colorResource(id = R.color.cuerpo)),
                 contentAlignment = Alignment.Center
             ){
                 Image(
@@ -162,7 +162,7 @@ fun MyDrawerContent(
                     modifier = Modifier
                         .size(150.dp)
                         .border(
-                            BorderStroke(borderWidth, colorResource(id = R.color.cuerpo)),
+                            BorderStroke(borderWidth, Color.White),
                             CircleShape
                         )
                         .padding(borderWidth)
@@ -177,7 +177,8 @@ fun MyDrawerContent(
                         label = {
                             Text(
                                 text = menuList.title,
-                                color = colorResource(id = R.color.cuerpo),
+                                color = Color.Black,
+                                fontWeight = FontWeight.ExtraBold
                             )
                         },
                         selected = menuList == menu[0],
@@ -185,7 +186,7 @@ fun MyDrawerContent(
                             Icon(
                                 imageVector = menuList.icon,
                                 contentDescription = menuList.title,
-                                tint = colorResource(id = R.color.cuerpo),
+                                tint = Color.Black
                             )
                         },
                         onClick = {
@@ -263,7 +264,7 @@ fun CardJuego(
             .clickable { navController.navigate("${Pantallas.GameScreen.name}/${juego.id}") },
         colors = CardDefaults.cardColors(
             containerColor = colorResource(id = R.color.cuerpo),
-            contentColor = colorResource(id = R.color.menu)
+            contentColor = Color.White
         )
     ){
         Column {
@@ -277,8 +278,10 @@ fun CardJuego(
                     .fillMaxWidth()
                     .height(250.dp)
             )
-            Text(text = juego.nombre, fontWeight = FontWeight.Bold)
-            Text(text = juego.released, fontWeight = FontWeight.Bold)
+            Spacer(modifier = Modifier.height(16.dp))
+            Text(text = "  ${juego.nombre}", fontWeight = FontWeight.Bold)
+            Text(text = "  ${juego.released}", fontWeight = FontWeight.Bold)
+            Spacer(modifier = Modifier.height(5.dp))
 
         }
     }
@@ -286,17 +289,18 @@ fun CardJuego(
 
 @Composable
 fun CardComentario(
-    contenido: String
+    contenido: String,
+    usuario: String
 ) {
     OutlinedCard(
         shape = RoundedCornerShape(4.dp),
         modifier = Modifier
             .padding(8.dp)
             .shadow(40.dp),
-        border = BorderStroke(1.5.dp, colorResource(id = R.color.menu))
+        border = BorderStroke(1.5.dp, colorResource(id = R.color.cuerpo))
     ) {
         Column(modifier = Modifier.padding(5.dp)) {
-            Text(text = "Comentario:", fontWeight = FontWeight.Bold)
+            Text(text = "Comentario usuario ${usuario}:", fontWeight = FontWeight.Bold)
             Text(text = "${contenido}")
 
         }
