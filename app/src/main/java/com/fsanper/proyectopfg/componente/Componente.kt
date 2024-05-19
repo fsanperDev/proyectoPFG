@@ -24,6 +24,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.filled.Logout
+import androidx.compose.material.icons.filled.Mail
 import androidx.compose.material.icons.filled.Menu
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardColors
@@ -67,6 +68,7 @@ import com.fsanper.proyectopfg.modelo.menu.MenuItem
 import com.fsanper.proyectopfg.modelo.videojuego.VideoJuegosLista
 import com.fsanper.proyectopfg.navegacion.Pantallas
 import com.fsanper.proyectopfg.pantalla.login.LoginScreenViewModel
+import com.fsanper.proyectopfg.viewModels.VideojuegosViewModel
 
 /**
  * Composable que representa la barra superior personalizada.
@@ -129,7 +131,8 @@ fun MyDrawerContent(
     onItemSelected: (title: String) -> Unit,
     onBackPress: () -> Unit,
     navController: NavHostController,
-    loginViewModel: LoginScreenViewModel = viewModel()
+    loginViewModel: LoginScreenViewModel = viewModel(),
+    juegoViewModel: VideojuegosViewModel = viewModel()
 ) {
     // Estilo de borde y elementos del menú
     val borderWidth = 4.dp
@@ -137,6 +140,10 @@ fun MyDrawerContent(
         MenuItem(
             title = stringResource(R.string.home),
             icon = Icons.Default.Home,
+        ),
+        MenuItem(
+            title = stringResource(R.string.contact),
+            icon = Icons.Default.Mail,
         ),
         MenuItem(
             title = stringResource(id = R.string.logout),
@@ -194,6 +201,10 @@ fun MyDrawerContent(
                             when (menuList.title) {
                                 "Home" -> {
                                     navController.navigate("homeScreen")
+                                    onBackPress() // Cierra el cajón de navegación después de la navegación
+                                }
+                                "Contact" -> {
+                                    navController.navigate("helpScreen")
                                     onBackPress() // Cierra el cajón de navegación después de la navegación
                                 }
                                 "Logout" -> {
@@ -267,7 +278,10 @@ fun CardJuego(
             contentColor = Color.White
         )
     ){
-        Column {
+        Column(
+            verticalArrangement = Arrangement.Center,
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
             val imagen = rememberImagePainter(data = juego.imagen)
 
             Image(
@@ -280,7 +294,6 @@ fun CardJuego(
             )
             Spacer(modifier = Modifier.height(16.dp))
             Text(text = "  ${juego.nombre}", fontWeight = FontWeight.Bold)
-            Text(text = "  ${juego.released}", fontWeight = FontWeight.Bold)
             Spacer(modifier = Modifier.height(5.dp))
 
         }

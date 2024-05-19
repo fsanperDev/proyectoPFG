@@ -6,6 +6,7 @@ import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
+import com.fsanper.proyectopfg.pantalla.help.HelpScreen
 import com.fsanper.proyectopfg.pantalla.juego.GameScreen
 import com.fsanper.proyectopfg.pantalla.login.LoginScreen
 import com.fsanper.proyectopfg.pantalla.principal.HomeScreen
@@ -51,6 +52,9 @@ fun NavGraph(
             } else {
                 // Manejar el caso donde no se proporciona un ID de juego válido
             }
+        }
+        composable(Pantallas.HelpScreen.name) {
+            HelpScreen(navController = navController)
         }
     }
 }

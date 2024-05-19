@@ -4,8 +4,6 @@ import android.content.ContentValues.TAG
 import android.util.Log
 import android.util.Patterns
 import android.widget.Toast
-import androidx.activity.compose.rememberLauncherForActivityResult
-import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.border
@@ -65,11 +63,7 @@ import androidx.compose.ui.window.Dialog
 import androidx.navigation.NavController
 import com.fsanper.proyectopfg.R
 import com.fsanper.proyectopfg.navegacion.Pantallas
-import com.google.android.gms.auth.api.signin.GoogleSignIn
-import com.google.android.gms.auth.api.signin.GoogleSignInOptions
-import com.google.android.gms.common.api.ApiException
 import com.google.firebase.Firebase
-import com.google.firebase.auth.GoogleAuthProvider
 import com.google.firebase.auth.auth
 
 @Composable

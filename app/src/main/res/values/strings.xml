@@ -16,6 +16,7 @@
     <string name="genero">Genero</string>
     <string name="age">Edad</string>
     <string name="home">Home</string>
+    <string name="contact">Contact</string>
     <string name="admin">Admin</string>
     <string name="menu">Menu</string>
     <string name="logout">Logout</string>
