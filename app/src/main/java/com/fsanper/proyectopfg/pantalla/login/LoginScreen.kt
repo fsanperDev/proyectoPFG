@@ -78,6 +78,7 @@ fun LoginScreen(
     val showLoginForm = rememberSaveable() {
         mutableStateOf(true)
     }
+    val context = LocalContext.current
 
     // Diseño de la superficie que ocupa toda la pantalla
     Surface(
@@ -106,12 +107,12 @@ fun LoginScreen(
 
             // Condición basada en el estado para mostrar el formulario de inicio de sesión o registro
             if (showLoginForm.value) {
-                Text(text = stringResource(id = R.string.welcome))
                 // Formulario de inicio de sesión
                 UserForm(isCreateAccount = false) { email, password ->
                     Log.d("My Login", "Logueando con $email y $password")
                     // Lógica para navegar a la pantalla de usuario regular
                     viewModel.signInWithEmailAndPassword(
+                        context,
                         email,
                         password
                     ) {
@@ -120,11 +121,11 @@ fun LoginScreen(
                 }
             } else {
                 // Formulario de registro
-                Text(text = stringResource(id = R.string.create_account))
                 RegisterUserForm(isCreateAccount = true) { user, name, email, password ->
                     Log.d("My Login", "Logueando con $email y $password")
                     // Lógica para crear un usuario y navegar a la pantalla principal
                     viewModel.createUserWithEmailAndPassword(
+                        context,
                         user,
                         name,
                         email,

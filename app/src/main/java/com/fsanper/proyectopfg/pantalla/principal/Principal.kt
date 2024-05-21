@@ -118,7 +118,9 @@ fun HomeScreen(
         },
     ) {
         // Contenido principal de la pantalla
-        Column(modifier = Modifier.fillMaxSize()) {
+        Column(modifier = Modifier
+            .fillMaxSize()
+            .background(colorResource(id = R.color.letra))) {
             MyTopBar(
                 onMenuClick = {
                     scope.launch {
@@ -141,6 +143,7 @@ fun HomeScreen(
                     modifier = Modifier
                         .fillMaxSize()
                         .padding(paddingValues)
+                        .background(colorResource(id = R.color.letra))
                 ) {
                     Contenido(navController = navController, juegoViewModel = juegoViewModel)
                 }
@@ -262,7 +265,9 @@ fun Contenido(
 
     LazyVerticalGrid(
         columns = GridCells.Fixed(2),
-        modifier = Modifier.fillMaxSize(),
+        modifier = Modifier
+            .fillMaxSize()
+            .background(colorResource(id = R.color.letra)),
         contentPadding = PaddingValues(8.dp)
     ) {
         items(juegos.size) { index ->

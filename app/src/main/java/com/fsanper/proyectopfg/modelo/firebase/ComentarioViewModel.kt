@@ -13,13 +13,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
 class ComentarioViewModel: ViewModel() {
-    /**
-     * Guarda la compra en la cesta.
-     * @param navController Un objeto NavHostController que controla la navegación en la aplicación.
-     * @param gameData Datos del juego que se va a agregar a la cesta.
-     * @param context Contexto de la aplicación.
-     */
-    fun saveCompra(
+    fun guardarComentario(
         navController: NavHostController,
         comentario: Comentario,
         context: Context,

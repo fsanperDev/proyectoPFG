@@ -1,6 +1,7 @@
 package com.fsanper.proyectopfg.pantalla.login
 
 import android.util.Log
+import android.widget.Toast
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -8,13 +9,14 @@ import androidx.navigation.NavHostController
 import com.fsanper.proyectopfg.modelo.usuario.Usuario
 import com.fsanper.proyectopfg.navegacion.Pantallas
 import com.google.firebase.Firebase
-import com.google.firebase.auth.AuthCredential
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.auth
 import com.google.firebase.firestore.FirebaseFirestore
 import kotlinx.coroutines.launch
 import java.security.MessageDigest
 import java.security.SecureRandom
+import android.content.Context
+import com.google.firebase.auth.FirebaseAuthUserCollisionException
 
 class LoginScreenViewModel : ViewModel() {
     private val auth: FirebaseAuth = Firebase.auth // Instancia de FirebaseAuth para autenticación en Firebase.
@@ -26,7 +28,7 @@ class LoginScreenViewModel : ViewModel() {
      * @param password: Contraseña.
      * @param home: Función de retorno para manejar la navegación después del inicio de sesión.
      */
-    fun signInWithEmailAndPassword(email: String, password: String, home: () -> Unit) =
+    fun signInWithEmailAndPassword(context: Context,email: String, password: String, home: () -> Unit) =
         viewModelScope.launch {
             try {
                 auth.signInWithEmailAndPassword(email, password)
@@ -37,12 +39,16 @@ class LoginScreenViewModel : ViewModel() {
                         } else {
                             Log.d(
                                 "MyLogin",
-                                "signInWithEmailAndPassword: ${task.result.toString()}"
+                                "signInWithEmailAndPassword: ${task.exception?.message}"
                             )
+                            // Mostrar un mensaje de error al usuario
+                            Toast.makeText(context, "Correo o contraseña incorrectos", Toast.LENGTH_SHORT).show()
                         }
                     }
             } catch (ex: Exception) {
                 Log.d("MyLogin", "signInWithEmailAndPassword: ${ex.message}")
+                // Mostrar un mensaje de error al usuario
+                Toast.makeText(context, "Error: ${ex.message}", Toast.LENGTH_SHORT).show()
             }
         }
 
@@ -54,21 +60,33 @@ class LoginScreenViewModel : ViewModel() {
      * @param password: Contraseña.
      * @param home: Función de retorno para manejar la navegación después de la creación del usuario.
      */
-    fun createUserWithEmailAndPassword(user: String, name: String, email: String, password: String, home: () -> Unit) {
+    fun createUserWithEmailAndPassword(context: Context, user: String, name: String, email: String, password: String, home: () -> Unit) {
         if (_loading.value == false) {
             _loading.value = true
             auth.createUserWithEmailAndPassword(email, password)
                 .addOnCompleteListener { task ->
-                    if (task.isSuccessful) {
-                        createUser(user, name, email, password)
-                        home()
-                    } else {
-                        Log.d(
-                            "MyLogin",
-                            "createUserWithEmailAndPassword: ${task.result.toString()}"
-                        )
+                    try {
+                        if (task.isSuccessful) {
+                            createUser(user, name, email, password)
+                            home()
+                        } else {
+                            Log.d(
+                                "MyLogin",
+                                "createUserWithEmailAndPassword: ${task.result.toString()}"
+                            )
+                            // Aquí manejamos la excepción específica para el caso de que el correo ya esté en uso
+                            if (task.exception is FirebaseAuthUserCollisionException) {
+                                Toast.makeText(context, "El correo electrónico ya está en uso", Toast.LENGTH_SHORT).show()
+                            } else {
+                                Toast.makeText(context, "Registro fallido: ${task.exception?.message}", Toast.LENGTH_SHORT).show()
+                            }
+                        }
+                    } catch (e: Exception) {
+                        Log.e("MyLogin", "Error al crear usuario: ${e.message}")
+                        Toast.makeText(context, "Error al crear usuario: El email ya esta en uso", Toast.LENGTH_SHORT).show()
+                    } finally {
+                        _loading.value = false
                     }
-                    _loading.value = false
                 }
         }
     }

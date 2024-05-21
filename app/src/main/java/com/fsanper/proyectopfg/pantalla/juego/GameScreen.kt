@@ -1,10 +1,8 @@
 package com.fsanper.proyectopfg.pantalla.juego
 
 import android.util.Log
-import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -13,18 +11,14 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
-import androidx.compose.material3.Card
-import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.DrawerValue
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.LocalTextStyle
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.ModalNavigationDrawer
-import androidx.compose.material3.OutlinedCard
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
@@ -42,14 +36,10 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.shadow
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.colorResource
-import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.core.text.HtmlCompat
@@ -62,9 +52,7 @@ import com.fsanper.proyectopfg.componente.MyDrawerContent
 import com.fsanper.proyectopfg.componente.MyTopBar
 import com.fsanper.proyectopfg.modelo.comentario.Comentario
 import com.fsanper.proyectopfg.modelo.firebase.ComentarioViewModel
-import com.fsanper.proyectopfg.modelo.usuario.Usuario
 import com.fsanper.proyectopfg.modelo.videojuego.DetallesJuego
-import com.fsanper.proyectopfg.navegacion.Pantallas
 import com.fsanper.proyectopfg.viewModels.VideojuegosViewModel
 import com.google.firebase.Firebase
 import com.google.firebase.auth.auth
@@ -285,7 +273,7 @@ fun CuadroComentarios(
                     usuario = "Anonimo",
                     idCorreo = idCorreo
                 )
-                comentario.saveCompra(
+                comentario.guardarComentario(
                     navController = navController,
                     comentario = nuevoComentario,
                     context = context,
