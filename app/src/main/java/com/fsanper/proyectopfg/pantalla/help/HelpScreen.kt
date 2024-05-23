@@ -7,9 +7,11 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.DrawerValue
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ModalNavigationDrawer
@@ -136,9 +138,14 @@ fun HelpScreen(navController: NavHostController){
 fun Contenido(
     navController: NavController
 ) {
-    var emailFrom by remember { mutableStateOf("") }
-    var subject by remember { mutableStateOf("") }
-    var message by remember { mutableStateOf("") }
+    var emailFrom = remember { mutableStateOf("") }
+    var subject = remember { mutableStateOf("") }
+    var message = remember { mutableStateOf("") }
+
+    val valido = remember(emailFrom.value, subject.value, message.value) {
+        emailFrom.value.trim().isNotBlank() && subject.value.trim().isNotBlank()
+                && message.value.trim().isNotBlank()
+    }
 
     val context = LocalContext.current
     val keyboardController = LocalSoftwareKeyboardController.current
@@ -149,20 +156,21 @@ fun Contenido(
         modifier = Modifier
             .padding(16.dp)
             .fillMaxWidth(),
-        verticalArrangement = Arrangement.spacedBy(16.dp)
+        verticalArrangement = Arrangement.Center,
+        horizontalAlignment = Alignment.CenterHorizontally
     ) {
         OutlinedTextField(
-            value = emailFrom,
-            onValueChange = { emailFrom = it },
-            label = { Text("Correo electrónico del destinatario") },
+            value = emailFrom.value,
+            onValueChange = { emailFrom.value = it },
+            label = { Text("Correo electrónico") },
             singleLine = true,
             keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Text),
             keyboardActions = KeyboardActions(onNext = { keyboardController?.hide() })
         )
 
         OutlinedTextField(
-            value = subject,
-            onValueChange = { subject = it },
+            value = subject.value,
+            onValueChange = { subject.value = it },
             label = { Text("Asunto") },
             singleLine = true,
             keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Text),
@@ -170,8 +178,8 @@ fun Contenido(
         )
 
         OutlinedTextField(
-            value = message,
-            onValueChange = { message = it },
+            value = message.value,
+            onValueChange = { message.value = it },
             label = { Text("Mensaje") },
             maxLines = 5,
             keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Text),
@@ -179,30 +187,41 @@ fun Contenido(
         )
 
         Button(
+            modifier = Modifier
+                .padding(3.dp),
+            shape = CircleShape,
+            enabled = valido,
+            colors = ButtonDefaults.buttonColors(
+                containerColor = colorResource(id = R.color.boton),
+                contentColor = colorResource(id = R.color.cuerpo)
+            ),
             onClick = {
                 coroutineScope.launch {
-                    sendEmail(emailFrom = emailFrom, asunto = subject, text = message)
-                    navController.navigate(Pantallas.HelpScreen.name)
-                    Toast.makeText(context, "Correo electrónico enviado con éxito", Toast.LENGTH_SHORT).show()
+                    try {
+                        sendEmail(emailFrom = emailFrom.value, asunto = subject.value, text = message.value)
+                        navController.navigate(Pantallas.HelpScreen.name)
+                        Toast.makeText(context, "Correo electrónico enviado con éxito", Toast.LENGTH_SHORT).show()
+                    } catch (e: Exception) {
+                        Toast.makeText(context, "Error al enviar el correo: ${e.message}", Toast.LENGTH_LONG).show()
+                    }
                 }
-            },
-            modifier = Modifier.align(Alignment.End)
+            }
         ) {
             Text("Enviar Correo")
         }
     }
 }
 
-fun sendEmail(emailFrom: String, asunto: String, text: String) {
-    GlobalScope.launch(Dispatchers.IO) {
+suspend fun sendEmail(emailFrom: String, asunto: String, text: String) {
+    withContext(Dispatchers.IO) {
         val userName = "proyectopfg16@gmail.com"
-        val password = "proyectopfg" // Usa la contraseña de aplicación generada
+        val password = "gsls rmok doca bkqa" // Usa la contraseña de aplicación generada
 
         val props = Properties().apply {
             put("mail.smtp.auth", "true")
             put("mail.smtp.starttls.enable", "true")
             put("mail.smtp.host", "smtp.gmail.com")
-            put("mail.smtp.port", "587")
+            put("mail.smtp.port", "587") // Cambiado a 587 para STARTTLS
         }
 
         val session = Session.getInstance(props, object : Authenticator() {
@@ -213,8 +232,9 @@ fun sendEmail(emailFrom: String, asunto: String, text: String) {
 
         try {
             val msg = MimeMessage(session).apply {
-                setFrom(InternetAddress(userName))
-                setRecipients(Message.RecipientType.TO, InternetAddress.parse(emailFrom))
+                setFrom(InternetAddress(userName)) // Usando la dirección del remitente autenticado
+                setReplyTo(arrayOf(InternetAddress(emailFrom))) // Configura el email del remitente como dirección de respuesta
+                setRecipients(Message.RecipientType.TO, InternetAddress.parse(userName))
                 setSubject(asunto)
                 setText(text)
             }
@@ -223,7 +243,7 @@ fun sendEmail(emailFrom: String, asunto: String, text: String) {
             println("Email enviado correctamente a $userName")
         } catch (e: MessagingException) {
             e.printStackTrace()
-            println("Error al enviar el correo: ${e.message}")
+            throw Exception("Error al enviar el correo: ${e.message}")
         }
     }
 }
