@@ -72,6 +72,7 @@ import com.fsanper.proyectopfg.viewModels.VideojuegosViewModel
 /**
  * Composable que representa la barra superior personalizada.
  * @param onMenuClick Función de devolución de llamada cuando se hace clic en el icono del menú.
+ * @param titulo Título de la barra superior.
  */
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -122,6 +123,7 @@ fun MyTopBar(
  * @param onBackPress Función de devolución de llamada cuando se presiona el botón de retroceso.
  * @param navController Objeto NavController que controla la navegación.
  * @param loginViewModel ViewModel para la pantalla de inicio de sesión.
+ * @param juegoViewModel ViewModel para la pantalla de videojuegos.
  */
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -261,6 +263,11 @@ fun BackPressHandler(enabled: Boolean = true, onBackPressed: () -> Unit) {
     }
 }
 
+/**
+ * Composable que representa una tarjeta de juego.
+ * @param juego Objeto que contiene la información del juego.
+ * @param navController Objeto NavController que controla la navegación.
+ */
 @Composable
 fun CardJuego(
     juego: VideoJuegosLista,
@@ -299,6 +306,11 @@ fun CardJuego(
     }
 }
 
+/**
+ * Composable que representa una tarjeta de comentario.
+ * @param contenido Contenido del comentario.
+ * @param usuario Nombre del usuario que hizo el comentario.
+ */
 @Composable
 fun CardComentario(
     contenido: String,

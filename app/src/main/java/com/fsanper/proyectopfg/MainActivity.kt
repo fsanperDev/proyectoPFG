@@ -17,23 +17,31 @@ import com.fsanper.proyectopfg.navegacion.NavGraph
 import com.fsanper.proyectopfg.ui.theme.ProyectoPFGTheme
 import com.fsanper.proyectopfg.viewModels.VideojuegosViewModel
 
+/**
+ * Actividad principal que representa la entrada de la aplicación.
+ */
 class MainActivity : ComponentActivity() {
     // Controlador de navegación para gestionar la navegación entre pantallas
     private lateinit var navController: NavHostController
+
+    // ViewModel para la gestión de videojuegos
     val juegoViewModel: VideojuegosViewModel by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        // Establecer el contenido de la actividad
         setContent {
+            // Establecer el tema de la aplicación
             ProyectoPFGTheme {
-                // A surface container using the 'background' color from the theme
+                // Contenedor Surface que utiliza el color de fondo del tema
                 Surface(
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colorScheme.background
                 ) {
+                    // Recordar el NavController para mantener el estado de la navegación
                     navController = rememberNavController()
 
-                    // Crear el gráfico de navegación y pasar el controlador de navegación y ViewModel de administrador
+                    // Crear el gráfico de navegación y pasar el controlador de navegación y ViewModel de videojuegos
                     NavGraph(navController = navController, juegoViewModel = juegoViewModel)
                 }
             }
