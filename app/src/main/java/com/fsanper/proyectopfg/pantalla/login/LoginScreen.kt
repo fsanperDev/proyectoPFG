@@ -6,6 +6,7 @@ import android.util.Patterns
 import android.widget.Toast
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -63,6 +64,7 @@ import androidx.compose.ui.window.Dialog
 import androidx.navigation.NavController
 import com.fsanper.proyectopfg.R
 import com.fsanper.proyectopfg.navegacion.Pantallas
+import com.fsanper.proyectopfg.viewModels.LoginScreenViewModel
 import com.google.firebase.Firebase
 import com.google.firebase.auth.auth
 
@@ -88,7 +90,9 @@ fun LoginScreen(
         Column(
             verticalArrangement = Arrangement.Center,
             horizontalAlignment = Alignment.CenterHorizontally,
-            modifier = Modifier.fillMaxSize()
+            modifier = Modifier
+                .fillMaxSize()
+                .background(colorResource(id = R.color.letra))
         ) {
             // Muestra el logotipo de la aplicación con un borde circular
             Image(

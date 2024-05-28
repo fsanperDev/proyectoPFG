@@ -1,6 +1,5 @@
 package com.fsanper.proyectopfg.pantalla.juego
 
-import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
@@ -51,13 +50,11 @@ import com.fsanper.proyectopfg.componente.CardComentario
 import com.fsanper.proyectopfg.componente.MyDrawerContent
 import com.fsanper.proyectopfg.componente.MyTopBar
 import com.fsanper.proyectopfg.modelo.comentario.Comentario
-import com.fsanper.proyectopfg.modelo.firebase.ComentarioViewModel
+import com.fsanper.proyectopfg.viewModels.ComentarioViewModel
 import com.fsanper.proyectopfg.modelo.videojuego.DetallesJuego
 import com.fsanper.proyectopfg.viewModels.VideojuegosViewModel
 import com.google.firebase.Firebase
 import com.google.firebase.auth.auth
-import com.google.firebase.firestore.FirebaseFirestore
-import com.google.firebase.firestore.Query
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
@@ -124,7 +121,7 @@ fun GameScreen(
                     modifier = Modifier
                         .verticalScroll(rememberScrollState())
                         .fillMaxSize()
-                        .padding(16.dp)
+                        .background(colorResource(id = R.color.letra))
                 ) {
                     Contenido(
                         idJuego = juegoId,
@@ -171,37 +168,42 @@ fun ImprimirInformacion(
     detalleJuego?.let { juego ->
         val idCorreo = Firebase.auth.currentUser?.uid
         val imagen = rememberImagePainter(data = juego.imagen)
-        Image(
-            painter = imagen,
-            contentDescription = null,
-            contentScale = ContentScale.Crop,
-            modifier = Modifier
-                .fillMaxWidth()
-                .height(250.dp)
-        )
-        Text(text = juego.nombre, style = MaterialTheme.typography.titleLarge, fontWeight = FontWeight.ExtraBold)
-        Spacer(modifier = Modifier.height(16.dp))
-        val descripcion = HtmlCompat.fromHtml(juego.descripcion, HtmlCompat.FROM_HTML_MODE_COMPACT)
-        Text(text = "Descripción:", style = MaterialTheme.typography.titleMedium)
-        Text(text = "${descripcion}", style = MaterialTheme.typography.bodyMedium)
-        Spacer(modifier = Modifier.height(16.dp))
-        Text(text = "Lanzamiento:", style = MaterialTheme.typography.titleMedium)
-        Text(text = "${juego.lanzamiento}", style = MaterialTheme.typography.bodyMedium)
-        Spacer(modifier = Modifier.height(16.dp))
-        Text(text = "Plataformas:", style = MaterialTheme.typography.titleMedium)
-        juego.plataformas.forEach { plataforma ->
-            Text(
-                text = "- ${plataforma.plataforma.nombre}",
-                style = MaterialTheme.typography.bodyMedium
+        Column(
+            modifier = Modifier.padding(10.dp)
+        ) {
+            Image(
+                painter = imagen,
+                contentDescription = null,
+                contentScale = ContentScale.Crop,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(250.dp)
+            )
+            Text(text = juego.nombre, style = MaterialTheme.typography.titleLarge, fontWeight = FontWeight.ExtraBold)
+            Spacer(modifier = Modifier.height(16.dp))
+            val descripcion = HtmlCompat.fromHtml(juego.descripcion, HtmlCompat.FROM_HTML_MODE_COMPACT)
+            Text(text = "Descripción:", style = MaterialTheme.typography.titleMedium)
+            Text(text = "${descripcion}", style = MaterialTheme.typography.bodyMedium)
+            Spacer(modifier = Modifier.height(16.dp))
+            Text(text = "Lanzamiento:", style = MaterialTheme.typography.titleMedium)
+            Text(text = "${juego.lanzamiento}", style = MaterialTheme.typography.bodyMedium)
+            Spacer(modifier = Modifier.height(16.dp))
+            Text(text = "Plataformas:", style = MaterialTheme.typography.titleMedium)
+            juego.plataformas.forEach { plataforma ->
+                Text(
+                    text = "- ${plataforma.plataforma.nombre}",
+                    style = MaterialTheme.typography.bodyMedium
+                )
+            }
+            Spacer(modifier = Modifier.height(16.dp))
+            CuadroComentarios(
+                nombreJuego = juego.nombre,
+                navController = navController,
+                idCorreo = idCorreo.toString(),
+                idJuego = idJuego
             )
         }
-        Spacer(modifier = Modifier.height(16.dp))
-        CuadroComentarios(
-            nombreJuego = juego.nombre,
-            navController = navController,
-            idCorreo = idCorreo.toString(),
-            idJuego = idJuego
-        )
+
     }
 }
 
@@ -228,7 +230,7 @@ fun CuadroComentarios(
     )
 
     LaunchedEffect(nombreJuego) {
-        ObtenerComentariosFirestore(nombreJuego) { listaComentario ->
+        comentario.ObtenerComentariosFirestore(nombreJuego) { listaComentario ->
             comentarios = listaComentario
         }
     }
@@ -265,7 +267,7 @@ fun CuadroComentarios(
             contentColor = colorResource(id = R.color.cuerpo)
         ),
         onClick = {
-            obtenerUltimoId { ultimoID ->
+            comentario.obtenerUltimoId { ultimoID ->
                 val nuevoComentario = Comentario(
                     idComentario = ultimoID + 1,
                     nombreJuego = nombreJuego,
@@ -283,55 +285,5 @@ fun CuadroComentarios(
         }
     ) {
         Text("Enviar Comentario")
-    }
-}
-
-fun ObtenerComentariosFirestore(nombreJuego: String, callback: (List<Comentario>) -> Unit) {
-    val comentariosList = mutableListOf<Comentario>()
-
-    // Referencia a la colección "comentario" en Firestore
-    val query = FirebaseFirestore.getInstance().collection("comentarios")
-        .whereEqualTo("nombreJuego", nombreJuego) // Filtrar por nombre de juego específico
-
-    query.get().addOnCompleteListener { task ->
-        if (task.isSuccessful) {
-            // Procesar documentos y construir la lista de comentarios
-            for (document in task.result!!.documents) {
-                val comentario = document.toObject(Comentario::class.java)
-                comentario?.let { comentariosList.add(it) }
-            }
-            // Llamar a la función de devolución de llamada con la lista de comentarios
-            callback(comentariosList)
-        } else {
-            // Manejar errores
-            val exception = task.exception
-            Log.w(
-                "ObtenerComentariosPorJuegoFirestore",
-                "Error fetching data: ${exception?.message}"
-            )
-        }
-    }
-}
-
-fun obtenerUltimoId(callback: (Long) -> Unit) {
-    val query = FirebaseFirestore.getInstance()
-        .collection("comentarios")
-        .orderBy("idComentario", Query.Direction.DESCENDING)
-        .limit(1)
-
-    query.get().addOnCompleteListener { task ->
-        if (task.isSuccessful) {
-            // Obtener el último documento y extraer el ID
-            val ultimaCompra = task.result!!.documents.firstOrNull()
-            val ultimoId = ultimaCompra?.getLong("idComentario") ?: 0L
-            // Llamar a la función de devolución de llamada con el último ID
-            callback(ultimoId)
-        } else {
-            // Manejar errores, como la falta de conexión a Internet
-            val exception = task.exception
-            Log.w("obtenerUltimoId", "Error fetching data: ${exception?.message}")
-            // Proporcionar otro valor predeterminado en caso de error
-            callback(0)
-        }
     }
 }

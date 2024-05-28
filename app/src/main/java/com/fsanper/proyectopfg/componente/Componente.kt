@@ -27,7 +27,6 @@ import androidx.compose.material.icons.filled.Logout
 import androidx.compose.material.icons.filled.Mail
 import androidx.compose.material.icons.filled.Menu
 import androidx.compose.material3.Card
-import androidx.compose.material3.CardColors
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Divider
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -67,7 +66,7 @@ import com.fsanper.proyectopfg.R
 import com.fsanper.proyectopfg.modelo.menu.MenuItem
 import com.fsanper.proyectopfg.modelo.videojuego.VideoJuegosLista
 import com.fsanper.proyectopfg.navegacion.Pantallas
-import com.fsanper.proyectopfg.pantalla.login.LoginScreenViewModel
+import com.fsanper.proyectopfg.viewModels.LoginScreenViewModel
 import com.fsanper.proyectopfg.viewModels.VideojuegosViewModel
 
 /**

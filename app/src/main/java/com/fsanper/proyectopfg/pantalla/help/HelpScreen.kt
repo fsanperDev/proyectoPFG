@@ -114,6 +114,7 @@ fun HelpScreen(navController: NavHostController){
                 modifier = Modifier
                     .fillMaxSize()
                     .padding(paddingValues)
+                    .background(colorResource(id = R.color.letra))
             ) {
                 Contenido(navController = navController)
             }
@@ -154,8 +155,8 @@ fun Contenido(
 
     Column(
         modifier = Modifier
-            .padding(16.dp)
-            .fillMaxWidth(),
+            .fillMaxWidth()
+            .background(colorResource(id = R.color.letra)),
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
