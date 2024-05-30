@@ -123,6 +123,7 @@ fun GameScreen(
                         .fillMaxSize()
                         .background(colorResource(id = R.color.letra))
                 ) {
+                    // Contenido específico del juego
                     Contenido(
                         idJuego = juegoId,
                         juegoViewModel = juegoViewModel,
@@ -140,6 +141,12 @@ fun GameScreen(
     }
 }
 
+/**
+ * Composable que obtiene y muestra el contenido de un juego específico.
+ * @param idJuego ID del juego a mostrar.
+ * @param juegoViewModel ViewModel que gestiona los datos del juego.
+ * @param navController Controlador de navegación.
+ */
 @Composable
 fun Contenido(
     idJuego: Int,
@@ -159,6 +166,12 @@ fun Contenido(
     )
 }
 
+/**
+ * Composable que imprime la información del juego.
+ * @param detalleJuego Detalles del juego a mostrar.
+ * @param navController Controlador de navegación.
+ * @param idJuego ID del juego.
+ */
 @Composable
 fun ImprimirInformacion(
     detalleJuego: DetallesJuego?,
@@ -179,7 +192,11 @@ fun ImprimirInformacion(
                     .fillMaxWidth()
                     .height(250.dp)
             )
-            Text(text = juego.nombre, style = MaterialTheme.typography.titleLarge, fontWeight = FontWeight.ExtraBold)
+            Text(
+                text = juego.nombre,
+                style = MaterialTheme.typography.titleLarge,
+                fontWeight = FontWeight.ExtraBold
+            )
             Spacer(modifier = Modifier.height(16.dp))
             val descripcion = HtmlCompat.fromHtml(juego.descripcion, HtmlCompat.FROM_HTML_MODE_COMPACT)
             Text(text = "Descripción:", style = MaterialTheme.typography.titleMedium)
@@ -203,10 +220,17 @@ fun ImprimirInformacion(
                 idJuego = idJuego
             )
         }
-
     }
 }
 
+/**
+ * Composable que muestra el cuadro de comentarios para un juego.
+ * @param comentario ViewModel para gestionar los comentarios.
+ * @param nombreJuego Nombre del juego.
+ * @param navController Controlador de navegación.
+ * @param idCorreo ID del correo del usuario.
+ * @param idJuego ID del juego.
+ */
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun CuadroComentarios(

@@ -68,13 +68,18 @@ import com.fsanper.proyectopfg.viewModels.LoginScreenViewModel
 import com.google.firebase.Firebase
 import com.google.firebase.auth.auth
 
+/**
+ * Pantalla de inicio de sesión.
+ *
+ * @param navController controlador de navegación para cambiar entre pantallas
+ * @param viewModel modelo de vista para la pantalla de inicio de sesión
+ */
 @Composable
 fun LoginScreen(
-    navController: NavController, // Control de navegación para cambiar entre pantallas
+    navController: NavController,
     viewModel: LoginScreenViewModel = androidx.lifecycle.viewmodel.compose.viewModel()
 ) {
     val borderWidth = 4.dp
-    //Text(text = "Login")
 
     // Estado para recordar si se debe mostrar el formulario de inicio de sesión o registro
     val showLoginForm = rememberSaveable() {
@@ -166,6 +171,12 @@ fun LoginScreen(
     }
 }
 
+/**
+ * Diálogo para restablecer la contraseña.
+ *
+ * @param onDimissRequest función de llamada cuando se solicita cerrar el diálogo
+ * @param onConfirmation función de llamada cuando se confirma la acción
+ */
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ForgottenPassword(
@@ -267,6 +278,12 @@ fun ForgottenPassword(
     }
 }
 
+/**
+ * Formulario de registro de usuario.
+ *
+ * @param isCreateAccount indica si se está creando una cuenta nueva o no
+ * @param onDone función de llamada cuando se completa el formulario
+ */
 @OptIn(ExperimentalComposeUiApi::class)
 @Composable
 fun RegisterUserForm(
@@ -315,6 +332,12 @@ fun RegisterUserForm(
     }
 }
 
+/**
+ * Formulario de inicio de sesión de usuario.
+ *
+ * @param isCreateAccount indica si se está creando una cuenta nueva o no
+ * @param onDone función de llamada cuando se completa el formulario
+ */
 @OptIn(ExperimentalComposeUiApi::class)
 @Composable
 fun UserForm(

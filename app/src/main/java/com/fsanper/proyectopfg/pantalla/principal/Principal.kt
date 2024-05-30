@@ -158,6 +158,11 @@ fun HomeScreen(
     }
 }
 
+/**
+ * Composable que representa el filtro de juegos.
+ * Muestra una lista de géneros y permite al usuario seleccionar uno.
+ * @param juegoViewModel Modelo de vista para los juegos.
+ */
 @Composable
 fun Filtro(juegoViewModel: VideojuegosViewModel) {
     var selectedGenre by remember { mutableStateOf<String?>(null) }

@@ -60,6 +60,11 @@ import javax.mail.Transport
 import javax.mail.internet.InternetAddress
 import javax.mail.internet.MimeMessage
 
+/**
+ * Composable que representa la pantalla de ayuda.
+ * Muestra un cajón de navegación y contenido principal.
+ * @param navController Objeto NavController que controla la navegación.
+ */
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun HelpScreen(navController: NavHostController){
@@ -131,7 +136,7 @@ fun HelpScreen(navController: NavHostController){
 
 /**
  * Composable que representa el contenido principal de la pantalla.
- * Muestra una lista de juegos.
+ * Muestra una interfaz de contacto con campos para correo electrónico, asunto y mensaje.
  * @param navController Objeto NavController que controla la navegación.
  */
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalComposeUiApi::class)
@@ -139,10 +144,12 @@ fun HelpScreen(navController: NavHostController){
 fun Contenido(
     navController: NavController
 ) {
+    // Estado de los campos de entrada
     var emailFrom = remember { mutableStateOf("") }
     var subject = remember { mutableStateOf("") }
     var message = remember { mutableStateOf("") }
 
+    // Verificación de validez de los campos de entrada
     val valido = remember(emailFrom.value, subject.value, message.value) {
         emailFrom.value.trim().isNotBlank() && subject.value.trim().isNotBlank()
                 && message.value.trim().isNotBlank()
@@ -150,9 +157,9 @@ fun Contenido(
 
     val context = LocalContext.current
     val keyboardController = LocalSoftwareKeyboardController.current
-
     val coroutineScope = rememberCoroutineScope()
 
+    // Layout principal
     Column(
         modifier = Modifier
             .fillMaxWidth()
@@ -160,6 +167,7 @@ fun Contenido(
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
+        // Campo de texto para correo electrónico
         OutlinedTextField(
             value = emailFrom.value,
             onValueChange = { emailFrom.value = it },
@@ -169,6 +177,7 @@ fun Contenido(
             keyboardActions = KeyboardActions(onNext = { keyboardController?.hide() })
         )
 
+        // Campo de texto para asunto
         OutlinedTextField(
             value = subject.value,
             onValueChange = { subject.value = it },
@@ -178,6 +187,7 @@ fun Contenido(
             keyboardActions = KeyboardActions(onNext = { keyboardController?.hide() })
         )
 
+        // Campo de texto para mensaje
         OutlinedTextField(
             value = message.value,
             onValueChange = { message.value = it },
@@ -187,6 +197,7 @@ fun Contenido(
             keyboardActions = KeyboardActions(onDone = { keyboardController?.hide() })
         )
 
+        // Botón para enviar correo electrónico
         Button(
             modifier = Modifier
                 .padding(3.dp),
@@ -213,18 +224,27 @@ fun Contenido(
     }
 }
 
+/**
+ * Envía un correo electrónico.
+ * @param emailFrom dirección del remitente del correo electrónico.
+ * @param asunto título del correo electrónico.
+ * @param text cuerpo del correo electrónico.
+ */
 suspend fun sendEmail(emailFrom: String, asunto: String, text: String) {
+    // Ejecuta el código en el contexto del despachador de E/S
     withContext(Dispatchers.IO) {
         val userName = "proyectopfg16@gmail.com"
         val password = "gsls rmok doca bkqa" // Usa la contraseña de aplicación generada
 
+        // Configuración de propiedades para el servidor SMTP
         val props = Properties().apply {
-            put("mail.smtp.auth", "true")
-            put("mail.smtp.starttls.enable", "true")
-            put("mail.smtp.host", "smtp.gmail.com")
-            put("mail.smtp.port", "587") // Cambiado a 587 para STARTTLS
+            put("mail.smtp.auth", "true") // Habilita la autenticación SMTP
+            put("mail.smtp.starttls.enable", "true") // Habilita STARTTLS para conexión segura
+            put("mail.smtp.host", "smtp.gmail.com") // Servidor SMTP de Gmail
+            put("mail.smtp.port", "587") // Puerto SMTP para STARTTLS
         }
 
+        // Sesión de autenticación para el servidor SMTP
         val session = Session.getInstance(props, object : Authenticator() {
             override fun getPasswordAuthentication(): PasswordAuthentication {
                 return PasswordAuthentication(userName, password)
@@ -232,17 +252,20 @@ suspend fun sendEmail(emailFrom: String, asunto: String, text: String) {
         })
 
         try {
+            // Construcción del mensaje de correo electrónico
             val msg = MimeMessage(session).apply {
                 setFrom(InternetAddress(userName)) // Usando la dirección del remitente autenticado
                 setReplyTo(arrayOf(InternetAddress(emailFrom))) // Configura el email del remitente como dirección de respuesta
-                setRecipients(Message.RecipientType.TO, InternetAddress.parse(userName))
-                setSubject(asunto)
-                setText(text)
+                setRecipients(Message.RecipientType.TO, InternetAddress.parse(userName)) // Enviar a la propia cuenta de Gmail
+                setSubject(asunto) // Asunto del correo
+                setText(text) // Cuerpo del mensaje
             }
 
+            // Envío del mensaje de correo electrónico
             Transport.send(msg)
             println("Email enviado correctamente a $userName")
         } catch (e: MessagingException) {
+            // Captura y maneja cualquier excepción de mensajería
             e.printStackTrace()
             throw Exception("Error al enviar el correo: ${e.message}")
         }
