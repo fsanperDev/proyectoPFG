@@ -20,7 +20,11 @@ data class DetallesJuego(
     @SerializedName("background_image")
     val imagen: String,           // URL de la imagen de fondo del juego
     @SerializedName("platforms")
-    val plataformas: List<Plataforma> // Lista de plataformas del juego
+    val plataformas: List<Plataforma>, // Lista de plataformas del juego
+    @SerializedName("stores")
+    val tiendas: List<Tienda>, // Lista de tiendas del juego
+    @SerializedName("genres")
+    val generos: List<Generos> // Lista de Generos del juego
 )
 
 /**
@@ -32,6 +36,16 @@ data class Plataforma(
     val plataforma: PlatformaDetalle // Detalles de la plataforma
 )
 
+data class Tienda(
+    @SerializedName("store")
+    val tienda: TiendaDetalle // Detalles de la plataforma
+)
+
+data class Generos(
+    @SerializedName("name")
+    val nombreGenero: String // Detalles de la plataforma
+)
+
 /**
  * Data class que representa los detalles de una plataforma.
  * @param nombre Nombre de la plataforma.
@@ -39,4 +53,9 @@ data class Plataforma(
 data class PlatformaDetalle(
     @SerializedName("name")
     val nombre: String // Nombre de la plataforma
+)
+
+data class TiendaDetalle(
+    @SerializedName("name")
+    val nombreTienda: String // Nombre de la plataforma
 )

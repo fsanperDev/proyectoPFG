@@ -37,7 +37,6 @@ class VideojuegosViewModel : ViewModel() {
             val response = RetrofitCliente.retrofit.obtenerJuegos(currentPage)
             val nuevosJuegos = response.body()?.listaVideojuegos ?: emptyList()
             _juegos.value = _juegos.value + nuevosJuegos // Actualizar el valor del MutableStateFlow
-            currentPage++
             _isLoading.value = false
         }
     }
@@ -87,6 +86,7 @@ class VideojuegosViewModel : ViewModel() {
     }
 
     fun loadMore() {
+        currentPage++
         obtenerJuegos()
     }
 

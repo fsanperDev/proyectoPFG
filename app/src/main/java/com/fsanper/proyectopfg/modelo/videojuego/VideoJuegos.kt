@@ -30,4 +30,11 @@ data class VideoJuegosLista(
     val metacritic: String,          // Puntuación del videojuego en Metacritic
     @SerializedName("background_image")
     val imagen: String,              // URL de la imagen de fondo del videojuego
+    @SerializedName("short_screenshots")
+    val short_screenshot: List<Screenshot>
+)
+
+data class Screenshot(
+    @SerializedName("image")
+    val screenshot: String
 )

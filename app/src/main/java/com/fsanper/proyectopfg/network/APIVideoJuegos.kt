@@ -48,4 +48,9 @@ interface APIVideoJuegos {
      */
     @GET("genres${Constantes.API_KEY}")
     suspend fun obtenerGeneros(): Response<Genero>
+
+    @GET("games${Constantes.API_KEY}")
+    suspend fun buscarJuegosPorNombre(
+        @Query("search") nombre: String
+    ): Response<DetallesJuego>
 }

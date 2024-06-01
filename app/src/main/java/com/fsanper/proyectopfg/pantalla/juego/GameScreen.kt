@@ -205,10 +205,26 @@ fun ImprimirInformacion(
             Text(text = "Lanzamiento:", style = MaterialTheme.typography.titleMedium)
             Text(text = "${juego.lanzamiento}", style = MaterialTheme.typography.bodyMedium)
             Spacer(modifier = Modifier.height(16.dp))
+            Text(text = "Genero:", style = MaterialTheme.typography.titleMedium)
+            juego.generos.forEach { genero ->
+                Text(
+                    text = "- ${genero.nombreGenero}",
+                    style = MaterialTheme.typography.bodyMedium
+                )
+            }
+            Spacer(modifier = Modifier.height(16.dp))
             Text(text = "Plataformas:", style = MaterialTheme.typography.titleMedium)
             juego.plataformas.forEach { plataforma ->
                 Text(
                     text = "- ${plataforma.plataforma.nombre}",
+                    style = MaterialTheme.typography.bodyMedium
+                )
+            }
+            Spacer(modifier = Modifier.height(16.dp))
+            Text(text = "Tiendas:", style = MaterialTheme.typography.titleMedium)
+            juego.tiendas.forEach { tienda ->
+                Text(
+                    text = "- ${tienda.tienda.nombreTienda}",
                     style = MaterialTheme.typography.bodyMedium
                 )
             }
