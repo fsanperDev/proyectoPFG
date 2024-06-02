@@ -52,5 +52,5 @@ interface APIVideoJuegos {
     @GET("games${Constantes.API_KEY}")
     suspend fun buscarJuegosPorNombre(
         @Query("search") nombre: String
-    ): Response<DetallesJuego>
+    ): Response<VideoJuego>
 }

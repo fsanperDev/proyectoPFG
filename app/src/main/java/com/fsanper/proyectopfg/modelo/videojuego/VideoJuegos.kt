@@ -31,10 +31,14 @@ data class VideoJuegosLista(
     @SerializedName("background_image")
     val imagen: String,              // URL de la imagen de fondo del videojuego
     @SerializedName("short_screenshots")
-    val short_screenshot: List<Screenshot>
+    val lista_screenshot: List<Screenshot>
 )
 
+/**
+ * Data class que representa una captura de pantalla de un videojuego.
+ * @param screenshot URL de la captura de pantalla.
+ */
 data class Screenshot(
     @SerializedName("image")
-    val screenshot: String
+    val screenshot: String          // URL de la captura de pantalla del videojuego
 )

@@ -11,6 +11,8 @@ import com.google.gson.annotations.SerializedName
  * @param plataformas Lista de plataformas en las que está disponible el juego.
  */
 data class DetallesJuego(
+    @SerializedName("slug")
+    val slug: String,
     @SerializedName("name")
     val nombre: String,           // Nombre del juego
     @SerializedName("description")

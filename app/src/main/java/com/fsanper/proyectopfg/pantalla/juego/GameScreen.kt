@@ -8,11 +8,15 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.lazy.LazyRow
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.DrawerValue
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.LocalTextStyle
@@ -34,6 +38,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
@@ -155,6 +160,7 @@ fun Contenido(
 ) {
     val detalleJuego by juegoViewModel.detalleJuego.collectAsState()
 
+    // Se ejecuta cuando se lanza el efecto terminando cuando el id cambia
     LaunchedEffect(idJuego) {
         juegoViewModel.obtenerDetallesJuego(idJuego)
     }
@@ -178,6 +184,7 @@ fun ImprimirInformacion(
     navController: NavHostController,
     idJuego: Int
 ) {
+    // Mediante el let comprobamos que detalleJuego no sea nulo
     detalleJuego?.let { juego ->
         val idCorreo = Firebase.auth.currentUser?.uid
         val imagen = rememberImagePainter(data = juego.imagen)
@@ -199,12 +206,19 @@ fun ImprimirInformacion(
             )
             Spacer(modifier = Modifier.height(16.dp))
             val descripcion = HtmlCompat.fromHtml(juego.descripcion, HtmlCompat.FROM_HTML_MODE_COMPACT)
+            // Descripción del juego
             Text(text = "Descripción:", style = MaterialTheme.typography.titleMedium)
             Text(text = "${descripcion}", style = MaterialTheme.typography.bodyMedium)
             Spacer(modifier = Modifier.height(16.dp))
+            // Capturas de pantalla
+            Text(text = "Capturas de pantalla:", style = MaterialTheme.typography.titleMedium)
+            insertarPantallazos(nombre = juego.slug)
+            Spacer(modifier = Modifier.height(16.dp))
+            // Lanzamiento del juego
             Text(text = "Lanzamiento:", style = MaterialTheme.typography.titleMedium)
             Text(text = "${juego.lanzamiento}", style = MaterialTheme.typography.bodyMedium)
             Spacer(modifier = Modifier.height(16.dp))
+            // Listado de generos
             Text(text = "Genero:", style = MaterialTheme.typography.titleMedium)
             juego.generos.forEach { genero ->
                 Text(
@@ -213,6 +227,7 @@ fun ImprimirInformacion(
                 )
             }
             Spacer(modifier = Modifier.height(16.dp))
+            // Listado de plataformas
             Text(text = "Plataformas:", style = MaterialTheme.typography.titleMedium)
             juego.plataformas.forEach { plataforma ->
                 Text(
@@ -221,6 +236,7 @@ fun ImprimirInformacion(
                 )
             }
             Spacer(modifier = Modifier.height(16.dp))
+            // Listado de tiendas
             Text(text = "Tiendas:", style = MaterialTheme.typography.titleMedium)
             juego.tiendas.forEach { tienda ->
                 Text(
@@ -229,6 +245,7 @@ fun ImprimirInformacion(
                 )
             }
             Spacer(modifier = Modifier.height(16.dp))
+            // Cuadro de comentarios para el juego
             CuadroComentarios(
                 nombreJuego = juego.nombre,
                 navController = navController,
@@ -236,6 +253,51 @@ fun ImprimirInformacion(
                 idJuego = idJuego
             )
         }
+    }
+}
+
+/**
+ * Composable que inserta las capturas de pantalla del juego.
+ * @param nombre Nombre del juego.
+ * @param juegoViewModel ViewModel para gestionar los datos del juego.
+ */
+@Composable
+fun insertarPantallazos(
+    nombre: String,
+    juegoViewModel: VideojuegosViewModel = viewModel()
+) {
+    val imagenes by juegoViewModel.imagen.collectAsState()
+
+    LaunchedEffect(nombre) {
+        juegoViewModel.obtenerPantallazos(nombre)
+    }
+
+    if (imagenes.isNotEmpty()) {
+        LazyRow(
+            modifier = Modifier.fillMaxWidth()
+        ) {
+            imagenes.forEach {  }
+            items(imagenes) { imagen ->
+                imagen.lista_screenshot.forEach {
+                    Image(
+                        painter = rememberImagePainter(data = it.screenshot),
+                        contentDescription = null,
+                        contentScale = ContentScale.Crop,
+                        modifier = Modifier
+                            .width(200.dp)
+                            .height(150.dp)
+                            .padding(end = 8.dp)
+                    )
+                }
+
+            }
+        }
+    } else {
+        // Muestra un mensaje en caso de no encontrar capturas
+        Text(
+            text = "No se encontraron imágenes",
+            style = MaterialTheme.typography.bodyMedium
+        )
     }
 }
 
