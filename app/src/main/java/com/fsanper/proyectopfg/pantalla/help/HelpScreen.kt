@@ -214,7 +214,7 @@ fun Contenido(
                         navController.navigate(Pantallas.HelpScreen.name)
                         Toast.makeText(context, "Correo electrónico enviado con éxito", Toast.LENGTH_SHORT).show()
                     } catch (e: Exception) {
-                        Toast.makeText(context, "Error al enviar el correo: ${e.message}", Toast.LENGTH_LONG).show()
+                        Toast.makeText(context, "Error. Se ha producido un error al enviar el correo", Toast.LENGTH_LONG).show()
                     }
                 }
             }

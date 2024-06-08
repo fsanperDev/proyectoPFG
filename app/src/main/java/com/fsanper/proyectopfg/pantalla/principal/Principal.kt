@@ -19,10 +19,14 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.wrapContentWidth
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.GridItemSpan
+import androidx.compose.foundation.lazy.grid.LazyGridState
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
+import androidx.compose.foundation.lazy.grid.rememberLazyGridState
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.FilterAlt
 import androidx.compose.material.icons.filled.MoreVert
@@ -71,11 +75,6 @@ import com.fsanper.proyectopfg.viewModels.VideojuegosViewModel
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
-/**
- * Composable que representa la pantalla principal de la aplicación.
- * Muestra un cajón de navegación y contenido principal.
- * @param navController Objeto NavController que controla la navegación.
- */
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun HomeScreen(
@@ -86,6 +85,9 @@ fun HomeScreen(
     val drawerState = rememberDrawerState(DrawerValue.Closed)
     val snackbarHostState = remember { SnackbarHostState() }
     val scope = rememberCoroutineScope()
+
+    // Estado de desplazamiento para la lista de juegos
+    val gridState = rememberLazyGridState()
 
     DisposableEffect(Unit) {
         juegoViewModel.resetearFiltro()
@@ -130,7 +132,7 @@ fun HomeScreen(
                 titulo = "Inicio"
             )
             Spacer(modifier = Modifier.height(8.dp)) // Espacio entre el TopBar y el Filtro
-            Filtro(juegoViewModel = juegoViewModel)
+            Filtro(juegoViewModel = juegoViewModel, gridState = gridState)
             Spacer(modifier = Modifier.height(8.dp)) // Espacio entre el Filtro y el contenido principal
             Scaffold(
                 snackbarHost = {
@@ -145,7 +147,7 @@ fun HomeScreen(
                         .padding(paddingValues)
                         .background(colorResource(id = R.color.letra))
                 ) {
-                    Contenido(navController = navController, juegoViewModel = juegoViewModel)
+                    Contenido(navController = navController, juegoViewModel = juegoViewModel, gridState = gridState)
                 }
             }
         }
@@ -164,10 +166,11 @@ fun HomeScreen(
  * @param juegoViewModel Modelo de vista para los juegos.
  */
 @Composable
-fun Filtro(juegoViewModel: VideojuegosViewModel) {
+fun Filtro(juegoViewModel: VideojuegosViewModel, gridState: LazyGridState) {
     var selectedGenre by remember { mutableStateOf<String?>(null) }
     val genero by juegoViewModel.genero.collectAsState()
     var filterMenuExpanded by remember { mutableStateOf(false) }
+    val scope = rememberCoroutineScope()
 
     Column(
         modifier = Modifier
@@ -189,7 +192,6 @@ fun Filtro(juegoViewModel: VideojuegosViewModel) {
                 modifier = Modifier
                     .clickable { filterMenuExpanded = true }
             ) {
-
                 Row(
                     modifier = Modifier.fillMaxWidth(),
                     horizontalArrangement = Arrangement.End
@@ -232,6 +234,9 @@ fun Filtro(juegoViewModel: VideojuegosViewModel) {
                     contentColor = colorResource(id = R.color.cuerpo)
                 ),
                 onClick = {
+                    scope.launch {
+                        gridState.scrollToItem(0)
+                    }
                     juegoViewModel.obtenerJuegos(selectedGenre)
                 }
             ) {
@@ -246,6 +251,9 @@ fun Filtro(juegoViewModel: VideojuegosViewModel) {
                 ),
                 onClick = {
                     selectedGenre = null
+                    scope.launch {
+                        gridState.scrollToItem(0)
+                    }
                     juegoViewModel.obtenerJuegos(null)
                 }
             ) {
@@ -263,13 +271,15 @@ fun Filtro(juegoViewModel: VideojuegosViewModel) {
 @Composable
 fun Contenido(
     navController: NavController,
-    juegoViewModel: VideojuegosViewModel
+    juegoViewModel: VideojuegosViewModel,
+    gridState: LazyGridState
 ) {
     val juegos by juegoViewModel.juegos.collectAsState()
     val isLoading by juegoViewModel.isLoading.collectAsState()
 
     LazyVerticalGrid(
         columns = GridCells.Fixed(2),
+        state = gridState,
         modifier = Modifier
             .fillMaxSize()
             .background(colorResource(id = R.color.letra)),

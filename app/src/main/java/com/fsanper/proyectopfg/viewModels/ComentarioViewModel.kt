@@ -30,10 +30,24 @@ class ComentarioViewModel: ViewModel() {
         try {
             fireStoreRef.set(comentario)
                 .addOnSuccessListener {
-                    navController.navigate("${Pantallas.GameScreen.name}/${idJuego}")
+                    // Necesitamos mover esto al hilo principal
+                    CoroutineScope(Dispatchers.Main).launch {
+                        Toast.makeText(context, "Comentario insertado correctamente", Toast.LENGTH_SHORT).show()
+                        navController.navigate("${Pantallas.GameScreen.name}/$idJuego")
+                    }
+                }
+                .addOnFailureListener { e ->
+                    // Necesitamos mover esto al hilo principal
+                    CoroutineScope(Dispatchers.Main).launch {
+                        Toast.makeText(context, "Error. No se ha podido guardar comentario correctamentes", Toast.LENGTH_SHORT).show()
+                        navController.navigate("${Pantallas.GameScreen.name}/$idJuego")
+                    }
                 }
         } catch (e: Exception) {
-            Toast.makeText(context, e.message, Toast.LENGTH_SHORT).show()
+            // Necesitamos mover esto al hilo principal
+            CoroutineScope(Dispatchers.Main).launch {
+                Toast.makeText(context, e.message, Toast.LENGTH_SHORT).show()
+            }
         }
     }
 
